@@ -1,0 +1,4 @@
+trialType,trialID,blockID,leftImage,rightImage,label,video,trialDuration,trialStartSilence,trialEndSilence,AG,AGType,AGImage,AGAudio,AGVideo,AGTime,AGgetInput,AGWidth,AGHeight
+AG,1,,,,,,,,,1,movie,,balloons_5,balloons_5,5000,,,
+training,2,1,A1,A2,bosas_look1cool1,A1_A2,5000,,,,,,,,,,,
+training,3,1,A1,A3,doffs_look1cool1,A1_A3,5000,,,,,,,,,,,
