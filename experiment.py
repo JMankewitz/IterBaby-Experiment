@@ -234,14 +234,15 @@ class InfantEyetrackingExperiment:
         }
 
         self.shapeAOIs = {}
-        aoi_width = 150
-        aoi_height = 150
+        aoi_width = 300
+        aoi_height = 300
 
         for shape, pos in self.shape_positions.items():
             pygaze_pos = psychopy_to_pygaze(pos)
             self.shapeAOIs[shape] = aoi.AOI('rectangle', pos=pygaze_pos, size=(aoi_width, aoi_height))
 
         self.logger.info(f"Shape positions assigned: {self.shape_positions}")
+        self.logger.info(f"psychopy bottomLeft: { self.pos['bottomLeft']}, Pygaze bottomLeft: {psychopy_to_pygaze(self.pos['bottomLeft'])}")
 
 
     def display_start_screen(self):
@@ -260,7 +261,7 @@ class InfantEyetrackingExperiment:
     def run_training_trial(self):
         # Draw all shapes statically.
         static_stimuli = draw_static_shapes(self.win, self.shape_positions, self.image_files,
-                                            init_size=100, init_opacity=0.3)
+                                            init_size=300, init_opacity=0.3)
         core.wait(0.5)  # Pause briefly to let the participant see all shapes.
         
         # Sequentially animate each shape in order.
@@ -272,13 +273,13 @@ class InfantEyetrackingExperiment:
             loom_shape_with_background(stim, self.win, pos, current_shape=shape,
                                     background_positions=self.shape_positions,
                                     image_files=self.image_files,
-                                    init_size=100, target_size=150,
+                                    init_size=300, target_size=450,
                                     init_opacity=0.3, target_opacity=1.0,
                                     loom_duration=1.0, jiggle_duration=0.5, fade_duration=0.5,
                                     jiggle_amplitude=5, jiggle_frequency=2)
             # Redraw the static display between animations.
             static_stimuli = draw_static_shapes(self.win, self.shape_positions, self.image_files,
-                                                init_size=100, init_opacity=0.3)
+                                                init_size=300, init_opacity=0.3)
 
     def run_gt_trial(self):
         """
@@ -292,7 +293,7 @@ class InfantEyetrackingExperiment:
         
         # Draw the static display.
         static_stimuli = draw_static_shapes(self.win, self.shape_positions, self.image_files,
-                                            init_size=100, init_opacity=0.3)
+                                            init_size=300, init_opacity=0.3)
         
         # If using eyetracker, start recording.
         if self.subjVariables.get('eyetracker') == "yes":
@@ -341,7 +342,7 @@ class InfantEyetrackingExperiment:
                                 current_shape=shape,
                                 background_positions=self.shape_positions,
                                 image_files=self.image_files,
-                                init_size=100, target_size=150,
+                                init_size=300, target_size=450,
                                 init_opacity=.3, target_opacity=1.0,
                                 loom_duration=1.0, jiggle_duration=0.5, fade_duration=0.5,
                                 jiggle_amplitude=5, jiggle_frequency=2)
@@ -352,7 +353,7 @@ class InfantEyetrackingExperiment:
                     gaze_histories[shape] = []  # Clear if gaze leaves the AOI.
             # Refresh the static display (optional, if needed).
             draw_static_shapes(self.win, self.shape_positions, self.image_files,
-                                            init_size=100, init_opacity=0.3)
+                                            init_size=300, init_opacity=0.3)
 
     def _fixation_duration(self, gaze_history):
         if not gaze_history:

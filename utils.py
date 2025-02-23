@@ -177,7 +177,7 @@ def setAndPresentScreen(display, screen, duration=0):
 
 def loom_shape_with_background(stim, win, pos, current_shape,
                                background_positions, image_files,
-                               init_size=100, target_size=150, 
+                               init_size=300, target_size=450,
                                init_opacity=0.3, target_opacity=1.0, 
                                loom_duration=1.0, jiggle_duration=0.5, fade_duration=0.5,
                                jiggle_amplitude=5, jiggle_frequency=2):
@@ -292,7 +292,7 @@ def assign_shape_positions(shapes, possible_locations):
     return shape_positions
 
 
-def draw_static_shapes(win, shape_positions, image_files, init_size=0.5, init_opacity=0.3):
+def draw_static_shapes(win, shape_positions, image_files, init_size=300, init_opacity=0.3):
     """
     Draws all shapes in their baseline state.
     
@@ -347,5 +347,5 @@ def psychopy_to_pygaze(psychopy_coord, screen_width=1920, screen_height=1080, st
     """
     x, y = psychopy_coord
     pyg_x = x + (screen_width / 2) - (stim_width / 2)
-    pyg_y = (screen_height / 2) - y - (stim_height / 2)
+    pyg_y = (screen_height / 2) - y - (stim_height/2)
     return (pyg_x, pyg_y)
