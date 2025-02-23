@@ -1,0 +1,6 @@
+trial_number,selection_number,location,shape,trigger_start,gaze_end
+1,0,N/A,N/A,N/A,N/A
+1,1,corner_1,circle,1740256221.48105,1740256222.4810681
+2,2,corner_2,circle,1740256222.483746,1740256223.48384
+3,3,corner_3,circle,1740256223.486496,1740256224.4865122
+4,4,corner_4,circle,1740256224.488548,1740256225.488567

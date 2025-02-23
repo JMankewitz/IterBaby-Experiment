@@ -1,0 +1,12 @@
+2025-02-23 13:52:37,778 - INFO - Settings LOGFILE set to: eyetrackingData/IterBaby_33
+2025-02-23 13:52:37,779 - INFO - Data file opened for non-eyetracker mode.
+2025-02-23 13:52:38,922 - INFO - Winsize: [2940 1912], win units: pix
+2025-02-23 13:52:38,922 - INFO - Display and screens initialized.
+2025-02-23 13:52:38,922 - INFO - Stimuli paths set.
+2025-02-23 13:52:38,926 - INFO - Keyboard input device initialized.
+2025-02-23 13:52:39,386 - INFO - Loaded Files
+2025-02-23 13:52:39,386 - INFO - Shape positions assigned: {'circle': (-320, 180), 'cross': (320, 180), 'star': (-320, -180), 't': (320, -180)}
+2025-02-23 13:52:40,463 - INFO - Experiment initialized with configuration.
+2025-02-23 13:52:40,463 - INFO - Starting gaze-triggered phase.
+2025-02-23 13:52:40,463 - INFO - Starting gaze-triggered phase.
+2025-02-23 13:52:45,477 - INFO - No gaze detected for 5 seconds; displaying re-cue.

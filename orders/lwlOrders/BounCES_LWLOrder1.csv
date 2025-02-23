@@ -1,9 +1,0 @@
-trialType,trialID,Condition,blockID,TargetImage,TargetObjectPos,DistracterImage,DistracterObjectPos,Audio,trialAudioDuration,trialStartSilence,trialEndSilence,AG,AGType,AGImage,AGAudio,AGVideo,AGTime,AGgetInput,AGWidth,AGHeight
-test,1,Practice,1,apple,bottomRight,ball,bottomLeft,look_apple,4500,0,500,0,,,,,,,,
-test,2,Prototype,1,AP,bottomLeft,BP,bottomRight,find_doff,4500,0,500,0,,,,,,,,
-test,3,Prototype,1,CP,bottomRight,AP,bottomLeft,where_reng,4500,0,500,0,,,,,,,,
-test,4,Boundary,1,B-C,bottomRight,A-C,bottomLeft,where_bosa,4500,0,500,0,,,,,,,,
-test,5,Boundary,1,A-B,bottomLeft,B-C,bottomRight,look_doff,4500,0,500,0,,,,,,,,
-test,6,Prototype,1,BP,bottomLeft,CP,bottomRight,look_bosa,4500,0,500,0,,,,,,,,
-test,7,Boundary,1,A-C,bottomRight,A-B,bottomLeft,find_reng,4500,0,500,0,,,,,,,,
-AG,8,,,,,,,,,,,1,movie,,balloons_5,balloons_5,5000,,1920,1080

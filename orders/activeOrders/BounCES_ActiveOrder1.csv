@@ -1,4 +1,0 @@
-trialType,trialID,blockID,leftStim,rightStim,leftStimType,rightStimType,leftLabel,rightLabel,leftAudio,rightAudio,trialDuration,trialStartSilence,trialEndSilence,AG,AGType,AGImage,AGAudio,AGVideo,AGTime,AGgetInput,AGWidth,AGHeight
-activeTest,1,1,AP_A_Left,B-C_C_Right,prototype,boundary,doff,reng,doff,reng,2500,0,0,0,,,,,,,,
-activeTest,2,1,A-C_A_Left,BP_B_Right,boundary,prototype,doff,bosa,doff,bosa,2500,0,0,0,,,,,,,,
-activeTest,3,1,A-B_B_Left,CP_C_Right,boundary,prototype,bosa,reng,bosa,reng,2500,0,0,0,,,,,,,,
