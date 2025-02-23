@@ -20,8 +20,8 @@ class InfantEyetrackingExperiment:
         self.x_length = constants.DISPSIZE[0]
         self.y_length = constants.DISPSIZE[1]
 
-        self.pos = {'bottomLeft': (-self.x_length/4, 0), 
-                    'bottomRight': (self.x_length/4, 0),
+        self.pos = {'bottomLeft': (-self.x_length/4, -self.y_length/4),
+                    'bottomRight': (self.x_length/4,  -self.y_length/4),
                     'centerLeft': (-480, 0), 'centerRight': (480, 0),
                     'topLeft': (-self.x_length/4, self.y_length/4),
                     'topRight': (self.x_length/4, self.y_length/4),
@@ -328,7 +328,7 @@ class InfantEyetrackingExperiment:
                 continue
             
             # Otherwise, assume gaze_sample is a tuple: (x, y, timestamp)
-            gx, gy, ts = gaze_sample
+            #gx, gy, ts = gaze_sample
             # Check each shape’s AOI.
             for shape in self.shape_order:
                 if self.shapeAOIs[shape].contains(gaze_sample):
@@ -341,8 +341,8 @@ class InfantEyetrackingExperiment:
                                 current_shape=shape,
                                 background_positions=self.shape_positions,
                                 image_files=self.image_files,
-                                init_size=self.init_size, target_size=150,
-                                init_opacity=self.init_opacity, target_opacity=1.0,
+                                init_size=100, target_size=150,
+                                init_opacity=.3, target_opacity=1.0,
                                 loom_duration=1.0, jiggle_duration=0.5, fade_duration=0.5,
                                 jiggle_amplitude=5, jiggle_frequency=2)
                             selections.append(shape)

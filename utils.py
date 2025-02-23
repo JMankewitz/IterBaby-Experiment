@@ -347,5 +347,5 @@ def psychopy_to_pygaze(psychopy_coord, screen_width=1920, screen_height=1080, st
     """
     x, y = psychopy_coord
     pyg_x = x + (screen_width / 2) - (stim_width / 2)
-    pyg_y = y + (screen_height / 2) - (stim_height / 2)
+    pyg_y = (screen_height / 2) - y - (stim_height / 2)
     return (pyg_x, pyg_y)
