@@ -225,13 +225,12 @@ class InfantEyetrackingExperiment:
 
     def setup_stimuli_assignment(self):
         self.shape_order = ["circle", "cross", "star", "t"]
-        possible_positions = [self.pos["bottomLeft"], self.pos["bottomRight"],
-                              self.pos["topLeft"], self.pos["topRight"]]
+        
         self.shape_positions = {
-            "circle": (-320, 180),
-            "cross": (320, 180),
-            "star": (-320, -180),
-            "t": (320, -180)
+            "circle": self.pos["bottomLeft"],
+            "cross": self.pos["bottomRight"],
+            "star": self.pos["topLeft"],
+            "t": self.pos["topRight"]
         }
 
         self.shapeAOIs = {}
@@ -239,7 +238,8 @@ class InfantEyetrackingExperiment:
         aoi_height = 150
 
         for shape, pos in self.shape_positions.items():
-            self.shapeAOIs[shape] = aoi.AOI('rectangle', pos=pos, size=(aoi_width, aoi_height))
+            pygaze_pos = psychopy_to_pygaze(pos)
+            self.shapeAOIs[shape] = aoi.AOI('rectangle', pos=pygaze_pos, size=(aoi_width, aoi_height))
 
         self.logger.info(f"Shape positions assigned: {self.shape_positions}")
 
@@ -317,7 +317,7 @@ class InfantEyetrackingExperiment:
                 gaze_sample = None
             
             self.logger.info(gaze_sample)
-            
+
             current_time = core.getTime()
             # If no valid gaze sample, optionally continue.
             if gaze_sample is None:

@@ -329,10 +329,23 @@ def check_fixation(gaze_history, required_duration=0.5):
     end_time = gaze_history[-1][1]
     return (end_time - start_time) >= required_duration
 
-def is_within_aoi(gaze_sample, aoi_center, aoi_width, aoi_height):
+def psychopy_to_pygaze(psychopy_coord, screen_width=1920, screen_height=1080, stim_width=300, stim_height=300):
     """
-    Check if the gaze sample (x, y) is within a rectangular AOI centered at aoi_center.
+    Converts a position from PsychoPy (centered) to pygaze (origin at bottom left)
+    and adjusts for stimulus size (assuming the PsychoPy coordinate is the center
+    of the stimulus and pygaze AOI is defined by the bottom-left corner).
+    
+    Parameters:
+      psychopy_coord: Tuple (x, y) in PsychoPy coordinates.
+      screen_width: Width of the pygaze screen (default 1920).
+      screen_height: Height of the pygaze screen (default 1080).
+      stim_width: Width of the stimulus in pixels (default 300).
+      stim_height: Height of the stimulus in pixels (default 300).
+    
+    Returns:
+      Tuple (x', y') representing the bottom-left coordinate for pygaze.
     """
-    x, y = gaze_sample
-    cx, cy = aoi_center
-    return (cx - aoi_width/2 <= x <= cx + aoi_width/2) and (cy - aoi_height/2 <= y <= cy + aoi_height/2)
+    x, y = psychopy_coord
+    pyg_x = x + (screen_width / 2) - (stim_width / 2)
+    pyg_y = y + (screen_height / 2) - (stim_height / 2)
+    return (pyg_x, pyg_y)
