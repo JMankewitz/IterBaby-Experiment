@@ -335,7 +335,7 @@ def psychopy_to_pygaze(psychopy_coord, screen_width=1920, screen_height=1080, st
     return (pyg_x, pyg_y)
 
 class LoomAnimation:
-    def __init__(self, stim, win, pos, current_shape, background_positions, image_files,
+    def __init__(self, stim, win, pos, current_shape, background_stimuli,
                  init_size=300, target_size=450,
                  init_opacity=0.3, target_opacity=1.0,
                  loom_duration=1.0, jiggle_duration=0.5, fade_duration=0.5,
@@ -344,9 +344,7 @@ class LoomAnimation:
         self.win = win
         self.pos = pos
         self.current_shape = current_shape
-        self.background_positions = background_positions
-        self.image_files = image_files
-        
+        self.background_stimuli = background_stimuli  # dictionary of preloaded stimuli
         self.init_size = init_size
         self.target_size = target_size
         self.init_opacity = init_opacity
@@ -356,10 +354,9 @@ class LoomAnimation:
         self.fade_duration = fade_duration
         self.jiggle_amplitude = jiggle_amplitude
         self.jiggle_frequency = jiggle_frequency
-        
         self.start_time = core.getTime()
-        self.phase = "looming"  # can be "looming", "jiggling", "fade-back", "complete"
-        self.current_angle = 0  # used during jiggle and fade phases
+        self.phase = "looming"
+        self.current_angle = 0
 
     def update(self, current_time):
         elapsed = current_time - self.start_time
@@ -367,12 +364,9 @@ class LoomAnimation:
         if self.phase == "looming":
             if elapsed < self.loom_duration:
                 t = elapsed / self.loom_duration
-                current_size = self.init_size + t * (self.target_size - self.init_size)
-                current_opacity = self.init_opacity + t * (self.target_opacity - self.init_opacity)
-                self.stim.size = current_size
-                self.stim.opacity = current_opacity
+                self.stim.size = self.init_size + t * (self.target_size - self.init_size)
+                self.stim.opacity = self.init_opacity + t * (self.target_opacity - self.init_opacity)
             else:
-                # Transition to jiggle phase.
                 self.phase = "jiggling"
                 self.start_time = current_time
         elif self.phase == "jiggling":
@@ -386,24 +380,19 @@ class LoomAnimation:
         elif self.phase == "fade-back":
             if elapsed < self.fade_duration:
                 t = elapsed / self.fade_duration
-                current_size = self.target_size - t * (self.target_size - self.init_size)
-                current_opacity = self.target_opacity - t * (self.target_opacity - self.init_opacity)
-                self.stim.size = current_size
-                self.stim.opacity = current_opacity
+                self.stim.size = self.target_size - t * (self.target_size - self.init_size)
+                self.stim.opacity = self.target_opacity - t * (self.target_opacity - self.init_opacity)
                 self.stim.ori = self.current_angle * (1 - t)
             else:
                 self.phase = "complete"
-                # Reset to baseline state.
                 self.stim.size = self.init_size
                 self.stim.opacity = self.init_opacity
                 self.stim.ori = 0
                 self.stim.pos = self.pos
-        
-        # Draw background shapes.
-        for shape, bg_pos in self.background_positions.items():
+
+        # Draw the preloaded background stimuli for all shapes except the current one.
+        for shape, bg_stim in self.background_stimuli.items():
             if shape != self.current_shape:
-                bg_stim = visual.ImageStim(self.win, image=self.image_files[shape], pos=bg_pos,
-                                           size=self.init_size, opacity=self.init_opacity, units='pix', ori=0)
                 bg_stim.draw()
         # Draw the looming shape.
         self.stim.draw()
