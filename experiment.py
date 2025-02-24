@@ -31,7 +31,8 @@ class InfantEyetrackingExperiment:
                     'stimleft': (-self.x_length/4, -350),
                     'stimright': (self.x_length/4, -350)
                     }
-
+        self.init_size = 300
+        self.init_opacity = .3
         # Setup subject info
         self.subjInfo = {
             '1': {'name': 'subjCode',
@@ -89,8 +90,8 @@ class InfantEyetrackingExperiment:
         self.setup_display()
         self.setup_exp_paths()
         self.setup_input_devices()
-        self.load_stimuli()
         self.setup_stimuli_assignment()
+        self.load_stimuli()
         self.display_start_screen()
 
 
@@ -218,8 +219,29 @@ class InfantEyetrackingExperiment:
             "circle": os.path.join(self.imagePath, "circle.png"),
             "cross": os.path.join(self.imagePath, "cross.png"),
             "star": os.path.join(self.imagePath, "star.png"),
-            "t": os.path.join(self.imagePath, "t.png")
+            "t": os.path.join(self.imagePath, "t.png"),
+            "fixator": os.path.join(self.imagePath, "spinning-wheel.png")
             }
+        self.fixator_stim = visual.ImageStim(
+                self.win,
+                image=self.image_files["fixator"],
+                pos=self.pos["center"],
+                size=200,          # Use your desired initial size.
+                opacity=1,       # Use your desired initial opacity.
+                units='pix',
+                ori=0
+            )
+        self.preloaded_static_stimuli = {}
+        for shape, pos in self.shape_positions.items():
+            self.preloaded_static_stimuli[shape] = visual.ImageStim(
+                self.win,
+                image=self.image_files[shape],
+                pos=pos,
+                size=300,          # Use your desired initial size.
+                opacity=0.3,       # Use your desired initial opacity.
+                units='pix',
+                ori=0
+            )
 
         self.logger.info("Loaded Files")
 
@@ -234,16 +256,14 @@ class InfantEyetrackingExperiment:
         }
 
         self.shapeAOIs = {}
-        aoi_width = 300
-        aoi_height = 300
+        aoi_width = 450
+        aoi_height = 450
 
         for shape, pos in self.shape_positions.items():
             pygaze_pos = psychopy_to_pygaze(pos)
             self.shapeAOIs[shape] = aoi.AOI('rectangle', pos=pygaze_pos, size=(aoi_width, aoi_height))
 
         self.logger.info(f"Shape positions assigned: {self.shape_positions}")
-        self.logger.info(f"psychopy bottomLeft: { self.pos['bottomLeft']}, Pygaze bottomLeft: {psychopy_to_pygaze(self.pos['bottomLeft'])}")
-
 
     def display_start_screen(self):
         self.initialScreen = libscreen.Screen()
@@ -259,15 +279,25 @@ class InfantEyetrackingExperiment:
         self.disp.show()
 
     def run_training_trial(self):
-        # Draw all shapes statically.
-        static_stimuli = draw_static_shapes(self.win, self.shape_positions, self.image_files,
-                                            init_size=300, init_opacity=0.3)
-        core.wait(0.5)  # Pause briefly to let the participant see all shapes.
+    # --- Phase 1: Show preloaded static shapes with a spinning wheel ---
+        spin_duration = 1 #second
+        spin_start = core.getTime()
+
+        while core.getTime() - spin_start < spin_duration:
+            draw_static_shapes(self.preloaded_static_stimuli)
+            elapsed = core.getTime() - spin_start
+            self.fixator_stim.ori = (elapsed * 360) % 360
+            self.fixator_stim.draw()
+            self.win.flip()
         
+        draw_static_shapes(self.preloaded_static_stimuli)
+        self.win.flip()
+
+        # --- Phase 2: Animate each shape ---
         # Sequentially animate each shape in order.
         for shape in self.shape_order:
             self.logger.info(f"Animating shape: {shape}")
-            stim = static_stimuli[shape]
+            stim = self.preloaded_static_stimuli[shape]
             pos = self.shape_positions[shape]
             # Animate the shape: it looms and rotates.
             loom_shape_with_background(stim, self.win, pos, current_shape=shape,
@@ -275,11 +305,11 @@ class InfantEyetrackingExperiment:
                                     image_files=self.image_files,
                                     init_size=300, target_size=450,
                                     init_opacity=0.3, target_opacity=1.0,
-                                    loom_duration=1.0, jiggle_duration=0.5, fade_duration=0.5,
+                                    loom_duration=1.0, jiggle_duration=0.5, fade_duration=0.25,
                                     jiggle_amplitude=5, jiggle_frequency=2)
             # Redraw the static display between animations.
-            static_stimuli = draw_static_shapes(self.win, self.shape_positions, self.image_files,
-                                                init_size=300, init_opacity=0.3)
+            draw_static_shapes(self.preloaded_static_stimuli)
+            self.win.flip()
 
     def run_gt_trial(self):
         """
@@ -290,11 +320,21 @@ class InfantEyetrackingExperiment:
         The phase ends after 4 selections or 10 seconds, whichever comes first.
         """
         self.logger.info("Starting gaze-triggered phase.")
-        
+        # --- Phase 1: Show preloaded static shapes with a spinning wheel ---
+        spin_duration = 1 #second
+        spin_start = core.getTime()
+
+        while core.getTime() - spin_start < spin_duration:
+            draw_static_shapes(self.preloaded_static_stimuli)
+            elapsed = core.getTime() - spin_start
+            self.fixator_stim.ori = (elapsed * 360) % 360
+            self.fixator_stim.draw()
+            self.win.flip()
         # Draw the static display.
-        static_stimuli = draw_static_shapes(self.win, self.shape_positions, self.image_files,
-                                            init_size=300, init_opacity=0.3)
+        draw_static_shapes(self.preloaded_static_stimuli)
+        self.win.flip()
         
+        # --- Phase 2: Gaze-triggered ---
         # If using eyetracker, start recording.
         if self.subjVariables.get('eyetracker') == "yes":
             self.tracker.start_recording()
@@ -338,13 +378,13 @@ class InfantEyetrackingExperiment:
                         if shape not in selections:
                             self.logger.info(f"Shape {shape} selected via fixation.")
                             loom_shape_with_background(
-                                static_stimuli[shape], self.win, self.shape_positions[shape],
+                                self.preloaded_static_stimuli[shape], self.win, self.shape_positions[shape],
                                 current_shape=shape,
                                 background_positions=self.shape_positions,
                                 image_files=self.image_files,
-                                init_size=300, target_size=450,
-                                init_opacity=.3, target_opacity=1.0,
-                                loom_duration=1.0, jiggle_duration=0.5, fade_duration=0.5,
+                                init_size=self.init_size, target_size=450,
+                                init_opacity=self.init_opacity, target_opacity=1.0,
+                                loom_duration=1.0, jiggle_duration=0.5, fade_duration=0.25,
                                 jiggle_amplitude=5, jiggle_frequency=2)
                             selections.append(shape)
                             selection_count += 1
@@ -352,8 +392,8 @@ class InfantEyetrackingExperiment:
                 else:
                     gaze_histories[shape] = []  # Clear if gaze leaves the AOI.
             # Refresh the static display (optional, if needed).
-            draw_static_shapes(self.win, self.shape_positions, self.image_files,
-                                            init_size=300, init_opacity=0.3)
+            draw_static_shapes(self.preloaded_static_stimuli)
+            self.win.flip()
 
     def _fixation_duration(self, gaze_history):
         if not gaze_history:
@@ -364,13 +404,18 @@ class InfantEyetrackingExperiment:
 
     def run_training_phase(self):
         self.logger.info("Starting training phase.")
-        self.run_training_trial()
+        n_trials = 5  # You can adjust this or retrieve from self.config, e.g., self.config.get('n_training_trials', 5)
+        for trial in range(1, n_trials + 1):
+            self.logger.info(f"Starting training trial {trial} of {n_trials}.")
+            self.run_training_trial()
+            core.wait(0.5)  # Optional: inter-trial interval between training trials.
         self.logger.info("Training phase completed.")
 
     def run_gaze_triggered_phase(self):
         self.logger.info("Starting gaze-triggered phase.")
-        # TODO: Implement gaze monitoring, trigger looming videos on 500ms fixation,
-        # re-cue if no fixation within 5 seconds, and log each trial’s result in real-time.
-        # For now, simulate multiple trials:
-        self.run_gt_trial()
+        n_trials = 3  # You can adjust this or retrieve from self.config, e.g., self.config.get('n_training_trials', 5)
+        for trial in range(1, n_trials + 1):
+            self.logger.info(f"Starting test trial {trial} of {n_trials}.")
+            self.run_gt_trial()
+            core.wait(0.5)
         self.logger.info("Gaze-triggered phase completed.")

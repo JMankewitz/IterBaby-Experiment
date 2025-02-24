@@ -292,28 +292,12 @@ def assign_shape_positions(shapes, possible_locations):
     return shape_positions
 
 
-def draw_static_shapes(win, shape_positions, image_files, init_size=300, init_opacity=0.3):
+def draw_static_shapes(preloaded_stimuli):
     """
-    Draws all shapes in their baseline state.
-    
-    Parameters:
-      win: PsychoPy window.
-      shape_positions: dict mapping shape names to positions.
-      image_files: dict mapping shape names to their image file paths.
-      init_size: The initial size scaling.
-      init_opacity: The initial opacity.
-      
-    Returns:
-      dict: Mapping of shape name to its ImageStim.
+    Draws preloaded static shape stimuli.
     """
-    stimuli = {}
-    for shape, pos in shape_positions.items():
-        stim = visual.ImageStim(win, image=image_files[shape], pos=pos, 
-                                  size=init_size, opacity=init_opacity, units='pix', ori=0)
+    for stim in preloaded_stimuli.values():
         stim.draw()
-        stimuli[shape] = stim
-    win.flip()
-    return stimuli
 
 
 def check_fixation(gaze_history, required_duration=0.5):
@@ -349,3 +333,80 @@ def psychopy_to_pygaze(psychopy_coord, screen_width=1920, screen_height=1080, st
     pyg_x = x + (screen_width / 2) - (stim_width / 2)
     pyg_y = (screen_height / 2) - y - (stim_height/2)
     return (pyg_x, pyg_y)
+
+class LoomAnimation:
+    def __init__(self, stim, win, pos, current_shape, background_positions, image_files,
+                 init_size=300, target_size=450,
+                 init_opacity=0.3, target_opacity=1.0,
+                 loom_duration=1.0, jiggle_duration=0.5, fade_duration=0.5,
+                 jiggle_amplitude=5, jiggle_frequency=2):
+        self.stim = stim
+        self.win = win
+        self.pos = pos
+        self.current_shape = current_shape
+        self.background_positions = background_positions
+        self.image_files = image_files
+        
+        self.init_size = init_size
+        self.target_size = target_size
+        self.init_opacity = init_opacity
+        self.target_opacity = target_opacity
+        self.loom_duration = loom_duration
+        self.jiggle_duration = jiggle_duration
+        self.fade_duration = fade_duration
+        self.jiggle_amplitude = jiggle_amplitude
+        self.jiggle_frequency = jiggle_frequency
+        
+        self.start_time = core.getTime()
+        self.phase = "looming"  # can be "looming", "jiggling", "fade-back", "complete"
+        self.current_angle = 0  # used during jiggle and fade phases
+
+    def update(self, current_time):
+        elapsed = current_time - self.start_time
+        
+        if self.phase == "looming":
+            if elapsed < self.loom_duration:
+                t = elapsed / self.loom_duration
+                current_size = self.init_size + t * (self.target_size - self.init_size)
+                current_opacity = self.init_opacity + t * (self.target_opacity - self.init_opacity)
+                self.stim.size = current_size
+                self.stim.opacity = current_opacity
+            else:
+                # Transition to jiggle phase.
+                self.phase = "jiggling"
+                self.start_time = current_time
+        elif self.phase == "jiggling":
+            if elapsed < self.jiggle_duration:
+                t = elapsed
+                self.current_angle = self.jiggle_amplitude * math.sin(2 * math.pi * self.jiggle_frequency * t)
+                self.stim.ori = self.current_angle
+            else:
+                self.phase = "fade-back"
+                self.start_time = current_time
+        elif self.phase == "fade-back":
+            if elapsed < self.fade_duration:
+                t = elapsed / self.fade_duration
+                current_size = self.target_size - t * (self.target_size - self.init_size)
+                current_opacity = self.target_opacity - t * (self.target_opacity - self.init_opacity)
+                self.stim.size = current_size
+                self.stim.opacity = current_opacity
+                self.stim.ori = self.current_angle * (1 - t)
+            else:
+                self.phase = "complete"
+                # Reset to baseline state.
+                self.stim.size = self.init_size
+                self.stim.opacity = self.init_opacity
+                self.stim.ori = 0
+                self.stim.pos = self.pos
+        
+        # Draw background shapes.
+        for shape, bg_pos in self.background_positions.items():
+            if shape != self.current_shape:
+                bg_stim = visual.ImageStim(self.win, image=self.image_files[shape], pos=bg_pos,
+                                           size=self.init_size, opacity=self.init_opacity, units='pix', ori=0)
+                bg_stim.draw()
+        # Draw the looming shape.
+        self.stim.draw()
+        self.win.flip()
+
+        return self.phase == "complete"
