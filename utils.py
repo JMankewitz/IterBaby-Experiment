@@ -177,6 +177,7 @@ def setAndPresentScreen(display, screen, duration=0):
 
 def loom_shape_with_background(stim, win, pos, current_shape,
                                background_positions, image_files,
+							   loom_sound = None, selection_sound = None,
                                init_size=300, target_size=450,
                                init_opacity=0.3, target_opacity=1.0, 
                                loom_duration=1.0, jiggle_duration=0.5, fade_duration=0.5,
@@ -203,6 +204,9 @@ def loom_shape_with_background(stim, win, pos, current_shape,
     """
     clock = core.Clock()
     # LOOMING PHASE
+    if loom_sound is not None:
+        loom_sound.play()
+        
     while clock.getTime() < loom_duration:
         t = clock.getTime() / loom_duration
         # Update looming parameters.
@@ -222,6 +226,8 @@ def loom_shape_with_background(stim, win, pos, current_shape,
     
     # JIGGLE PHASE: Smooth rotation oscillation.
     clock.reset()
+    if selection_sound is not None:
+        selection_sound.play()
     while clock.getTime() < jiggle_duration:
         t = clock.getTime()
         current_angle = jiggle_amplitude * math.sin(2 * math.pi * jiggle_frequency * t)
@@ -339,7 +345,8 @@ class LoomAnimation:
                  init_size=300, target_size=450,
                  init_opacity=0.3, target_opacity=1.0,
                  loom_duration=1.0, jiggle_duration=0.5, fade_duration=0.5,
-                 jiggle_amplitude=5, jiggle_frequency=2):
+                 jiggle_amplitude=5, jiggle_frequency=2,
+				 loom_sound=None, selection_sound=None):
         self.stim = stim
         self.win = win
         self.pos = pos
@@ -357,11 +364,18 @@ class LoomAnimation:
         self.start_time = core.getTime()
         self.phase = "looming"
         self.current_angle = 0
+        self.loom_sound = loom_sound
+        self.selection_sound = selection_sound
+        self.loom_sound_played = False
+        self.selection_sound_played = False
 
     def update(self, current_time):
         elapsed = current_time - self.start_time
         
         if self.phase == "looming":
+            if not self.loom_sound_played and self.loom_sound is not None:
+                self.loom_sound.play()
+                self.loom_sound_played = True
             if elapsed < self.loom_duration:
                 t = elapsed / self.loom_duration
                 self.stim.size = self.init_size + t * (self.target_size - self.init_size)
@@ -370,6 +384,9 @@ class LoomAnimation:
                 self.phase = "jiggling"
                 self.start_time = current_time
         elif self.phase == "jiggling":
+            if not self.selection_sound_played and self.selection_sound is not None:
+                self.selection_sound.play()
+                self.selection_sound_played = True
             if elapsed < self.jiggle_duration:
                 t = elapsed
                 self.current_angle = self.jiggle_amplitude * math.sin(2 * math.pi * self.jiggle_frequency * t)

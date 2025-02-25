@@ -6,7 +6,6 @@ from utils import *
 import tobii_research as tr
 from psychopy.hardware import keyboard
 
-
 import constants
 
 class InfantEyetrackingExperiment:
@@ -213,8 +212,12 @@ class InfantEyetrackingExperiment:
         
         self.movieMatrix = loadFilesMovie(self.moviePath, ['mp4', 'mov'], 'movie', self.win)
         self.AGmovieMatrix = loadFilesMovie(self.AGPath, ['mp4'], 'movie', self.win)
-        #self.soundMatrix = loadFiles(self.soundPath, ['.mp3', '.wav'], 'sound')
-        #self.AGsoundMatrix = loadFiles(self.AGPath, ['.mp3', '.wav'], 'sound')
+        selectionSoundMatrix = loadFiles(os.path.join(self.soundPath, 'selection'), ['.mp3', '.wav'], 'sound')
+        loomSoundMatrix = loadFiles(os.path.join(self.soundPath, 'loom'), ['.mp3', '.wav'], 'sound')
+        self.AGsoundMatrix = loadFiles(self.AGPath, ['.mp3', '.wav'], 'sound')
+
+        
+
         self.image_files = {
             "circle": os.path.join(self.imagePath, "circle.png"),
             "cross": os.path.join(self.imagePath, "cross.png"),
@@ -242,6 +245,21 @@ class InfantEyetrackingExperiment:
                 units='pix',
                 ori=0
             )
+
+        self.loom_sounds = {}
+        self.selection_sounds = {}
+
+        loom_sound_keys = list(loomSoundMatrix.keys())
+        for i, shape in enumerate(self.shape_order):
+            # Cycle through loom sounds if there are fewer sounds than shapes.
+            key = loom_sound_keys[i % len(loom_sound_keys)]
+            self.loom_sounds[shape] = loomSoundMatrix[key]
+
+        selection_sound_keys = list(selectionSoundMatrix.keys())
+        for i, shape in enumerate(self.shape_order):
+            # Cycle through loom sounds if there are fewer sounds than shapes.
+            key = selection_sound_keys[i % len(selection_sound_keys)]
+            self.selection_sounds[shape] = selectionSoundMatrix[key]
 
         self.logger.info("Loaded Files")
 
@@ -306,19 +324,14 @@ class InfantEyetrackingExperiment:
                                     init_size=300, target_size=450,
                                     init_opacity=0.3, target_opacity=1.0,
                                     loom_duration=1.0, jiggle_duration=0.5, fade_duration=0.25,
-                                    jiggle_amplitude=5, jiggle_frequency=2)
+                                    jiggle_amplitude=5, jiggle_frequency=2,
+                                    loom_sound = self.loom_sounds[shape], 
+                                    selection_sound = self.selection_sounds[shape])
             # Redraw the static display between animations.
             draw_static_shapes(self.preloaded_static_stimuli)
             self.win.flip()
 
     def run_gt_trial(self):
-        """
-        Runs the gaze-triggered phase with queued looming animations.
-        Each triggered animation must finish before the next candidate (N+1) is started.
-        While an animation is active, gaze is used to collect and queue the next candidate.
-        If the infant changes their mind (fixates a different shape), the queued candidate is replaced.
-        A cooldown is applied to avoid immediate re-triggering of the same shape.
-        """
         self.logger.info("Starting gaze-triggered phase.")
         
         # --- Phase 1: Show static shapes with a spinning fixator ---
@@ -330,11 +343,9 @@ class InfantEyetrackingExperiment:
             self.fixator_stim.ori = (elapsed * 360) % 360
             self.fixator_stim.draw()
             self.win.flip()
-        # Draw the static display.
         draw_static_shapes(self.preloaded_static_stimuli)
         self.win.flip()
         
-        # --- Start the gaze-triggered phase ---
         if self.subjVariables.get('eyetracker') == "yes":
             self.tracker.start_recording()
         
@@ -342,36 +353,39 @@ class InfantEyetrackingExperiment:
         max_trial_time = 15  # seconds
         required_fixation = 0.33  # seconds
         selection_count = 0
-        
-        # Dictionaries for gaze history and trigger flags.
+
+        # Setup dictionaries.
         gaze_histories = {shape: [] for shape in self.shape_order}
         triggered_flags = {shape: False for shape in self.shape_order}
-        
-        # Dictionary for cooldown timing.
         last_triggered = {shape: 0 for shape in self.shape_order}
         cooldown = 0.5  # seconds cooldown
+
+        active_animation = None    # Currently running animation.
+        queued_animation = None    # Candidate for the next animation.
         
-        # Variables for managing animations.
-        active_animation = None    # Currently running animation (N).
-        queued_animation = None    # Candidate for the next animation (N+1).
-        
-        while (core.getTime() - trial_start) < max_trial_time and selection_count < 5:
+        # Main loop: run until max_trial_time OR we've reached 4 selections and no animation is active.
+        while (core.getTime() - trial_start) < max_trial_time:
+            # If we've already reached 4 selections and no animation is playing, end the trial.
+            if selection_count >= 4 and active_animation is None:
+                break
+
             current_time = core.getTime()
             
-            # Update the active animation if one is running.
+            # Update active animation.
             if active_animation is not None:
                 if active_animation.update(current_time):
-                    # Active animation finished.
                     last_triggered[active_animation.current_shape] = current_time
                     active_animation = None
-                    # Clear any queued candidate when an animation completes.
-                    queued_animation = None
-            # If no active animation is running but there's a queued candidate, start it.
-            if active_animation is None and queued_animation is not None:
-                active_animation = queued_animation
-                queued_animation = None
-                selection_count += 1  # Count this as a selection.
+                    queued_animation = None  # Clear queued candidate when one finishes.
             
+            # If no animation is active and there's a queued candidate, promote it.
+            if active_animation is None and queued_animation is not None:
+                # Only promote if we haven't reached 4 selections.
+                if selection_count < 4:
+                    active_animation = queued_animation
+                    queued_animation = None
+                    selection_count += 1
+
             # Get a gaze sample.
             if self.subjVariables.get('eyetracker') == "yes":
                 gaze_sample = self.tracker.sample()
@@ -381,19 +395,18 @@ class InfantEyetrackingExperiment:
             if gaze_sample is None:
                 if (current_time - trial_start) > 5:
                     self.logger.info("No gaze detected for 5 seconds; displaying re-cue.")
-                    # Optionally, display a re-cue stimulus here.
                 continue
             
-            # Process the gaze sample for each shape's AOI.
+            # Process gaze sample for each shape.
             for shape in self.shape_order:
                 if self.shapeAOIs[shape].contains(gaze_sample):
                     gaze_histories[shape].append((gaze_sample, current_time))
                     if self._fixation_duration(gaze_histories[shape]) >= required_fixation:
-                        # Only trigger if the cooldown has passed.
+                        # Enforce cooldown.
                         if current_time - last_triggered[shape] < cooldown:
                             continue
-                        # When no animation is playing, trigger immediately.
-                        if active_animation is None:
+                        # Immediate trigger only if no animation is active and we haven't reached 4.
+                        if active_animation is None and selection_count < 4:
                             self.logger.info(f"Shape {shape} triggered via fixation (immediate).")
                             active_animation = LoomAnimation(
                                 stim=self.preloaded_static_stimuli[shape],
@@ -409,16 +422,18 @@ class InfantEyetrackingExperiment:
                                 jiggle_duration=0.5,
                                 fade_duration=0.25,
                                 jiggle_amplitude=5,
-                                jiggle_frequency=2
+                                jiggle_frequency=2,
+                                loom_sound=self.loom_sounds[shape],
+                                selection_sound=self.selection_sounds[shape]
                             )
                             selection_count += 1
                             triggered_flags[shape] = True
                             gaze_histories[shape] = []
                             last_triggered[shape] = current_time
-                        else:
-                            # Active animation is playing; queue the candidate as N+1.
-                            # If a candidate is already queued and it's a different shape, replace it.
-                            if (queued_animation is None) or (queued_animation.current_shape != shape):
+                        # If an animation is active, allow queuing only if selection_count is less than 3.
+                        elif active_animation is not None and selection_count < 3:
+                            # Only queue if we don't already have a candidate for a different shape.
+                            if queued_animation is None or queued_animation.current_shape != shape:
                                 self.logger.info(f"Shape {shape} queued as next candidate (N+1).")
                                 queued_animation = LoomAnimation(
                                     stim=self.preloaded_static_stimuli[shape],
@@ -434,17 +449,19 @@ class InfantEyetrackingExperiment:
                                     jiggle_duration=0.5,
                                     fade_duration=0.25,
                                     jiggle_amplitude=5,
-                                    jiggle_frequency=2
+                                    jiggle_frequency=2,
+                                    loom_sound=self.loom_sounds[shape],
+                                    selection_sound=self.selection_sounds[shape]
                                 )
                                 triggered_flags[shape] = True
                                 gaze_histories[shape] = []
                                 last_triggered[shape] = current_time
                 else:
-                    # Clear gaze history and trigger flag if gaze moves out of AOI.
+                    # Clear history if gaze is not on the AOI.
                     gaze_histories[shape] = []
                     triggered_flags[shape] = False
             
-            # If no animation is active (or queued), refresh the static display.
+            # If nothing is active, refresh the static display.
             if active_animation is None and queued_animation is None:
                 draw_static_shapes(self.preloaded_static_stimuli)
                 self.win.flip()
@@ -460,7 +477,7 @@ class InfantEyetrackingExperiment:
 
     def run_training_phase(self):
         self.logger.info("Starting training phase.")
-        n_trials = 3  # You can adjust this or retrieve from self.config, e.g., self.config.get('n_training_trials', 5)
+        n_trials = 5  # You can adjust this or retrieve from self.config, e.g., self.config.get('n_training_trials', 5)
         for trial in range(1, n_trials + 1):
             self.logger.info(f"Starting training trial {trial} of {n_trials}.")
             self.run_training_trial()
