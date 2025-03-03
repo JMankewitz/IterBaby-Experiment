@@ -341,12 +341,57 @@ def psychopy_to_pygaze(psychopy_coord, screen_width=1920, screen_height=1080, st
     return (pyg_x, pyg_y)
 
 class LoomAnimation:
+    """
+    Animation class that handles the looming, jiggling, and fade-back phases
+    of shape animations.
+
+    Parameters:
+    -----------
+    stim : psychopy.visual.ImageStim
+        The stimulus to animate
+    win : psychopy.visual.Window
+        The window to display the animation in
+    pos : tuple (x, y)
+        The position of the stimulus in window coordinates
+    current_shape : str
+        The name/identifier of the shape being animated
+    background_stimuli : dict
+        Dictionary of {shape_name: stimulus} for all background shapes
+    init_size : int
+        Initial size of the stimulus (default: 300)
+    target_size : int
+        Target size for looming phase (default: 450)
+    init_opacity : float
+        Initial opacity of the stimulus (default: 0.3)
+    target_opacity : float
+        Target opacity for looming phase (default: 1.0)
+    loom_duration : float
+        Duration of the looming phase in seconds (default: 1.0)
+    jiggle_duration : float
+        Duration of the jiggling phase in seconds (default: 0.5)
+    fade_duration : float
+        Duration of the fade-back phase in seconds (default: 0.5)
+    jiggle_amplitude : float
+        Maximum rotation angle in degrees (default: 5)
+    jiggle_frequency : float
+        Frequency of oscillation in Hz (default: 2)
+    loom_sound : psychopy.sound.Sound
+        Sound to play during looming phase (default: None)
+    selection_sound : psychopy.sound.Sound
+        Sound to play during jiggling phase (default: None)
+    """
+    # Define explicit states
+    LOOMING = "looming"
+    JIGGLING = "jiggling"
+    FADE_BACK = "fade-back"
+    COMPLETE = "complete"
     def __init__(self, stim, win, pos, current_shape, background_stimuli,
                  init_size=300, target_size=450,
                  init_opacity=0.3, target_opacity=1.0,
                  loom_duration=1.0, jiggle_duration=0.5, fade_duration=0.5,
                  jiggle_amplitude=5, jiggle_frequency=2,
 				 loom_sound=None, selection_sound=None):
+
         self.stim = stim
         self.win = win
         self.pos = pos
@@ -361,58 +406,135 @@ class LoomAnimation:
         self.fade_duration = fade_duration
         self.jiggle_amplitude = jiggle_amplitude
         self.jiggle_frequency = jiggle_frequency
-        self.start_time = core.getTime()
-        self.phase = "looming"
-        self.current_angle = 0
+
+        # Store the original stimulus properties to restore later
+        self.original_size = stim.size
+        self.original_opacity = stim.opacity
+        self.original_ori = stim.ori
+
+        # Sound effects
         self.loom_sound = loom_sound
         self.selection_sound = selection_sound
         self.loom_sound_played = False
         self.selection_sound_played = False
 
-    def update(self, current_time):
+        # Animation state
+        from psychopy import core
+        self.start_time = core.getTime()
+        self.state = self.LOOMING
+        self.current_angle = 0
+
+        # Save original stimulus properties
+        self.initial_stim_props = {
+            'size': stim.size,
+            'opacity': stim.opacity,
+            'ori': stim.ori,
+            'pos': stim.pos
+        }
+
+    def update(self, current_time = None):
+        """
+        Update the animation state based on elapsed time.
+
+        Parameters:
+        -----------
+        current_time : float, optional
+            Current time in seconds. If None, gets current time.
+
+        Returns:
+        --------
+        bool
+            True if the animation is complete, False otherwise
+        """
+        from psychopy import core
+        import math
+
+        if current_time is None:
+            current_time = core.getTime()
+
         elapsed = current_time - self.start_time
         
-        if self.phase == "looming":
+        if self.state == self.LOOMING:
             if not self.loom_sound_played and self.loom_sound is not None:
                 self.loom_sound.play()
                 self.loom_sound_played = True
+
             if elapsed < self.loom_duration:
                 t = elapsed / self.loom_duration
                 self.stim.size = self.init_size + t * (self.target_size - self.init_size)
                 self.stim.opacity = self.init_opacity + t * (self.target_opacity - self.init_opacity)
             else:
-                self.phase = "jiggling"
+                self.state = self.JIGGLING
                 self.start_time = current_time
-        elif self.phase == "jiggling":
+
+        elif self.state == self.JIGGLING:
             if not self.selection_sound_played and self.selection_sound is not None:
                 self.selection_sound.play()
                 self.selection_sound_played = True
+
             if elapsed < self.jiggle_duration:
                 t = elapsed
                 self.current_angle = self.jiggle_amplitude * math.sin(2 * math.pi * self.jiggle_frequency * t)
                 self.stim.ori = self.current_angle
             else:
-                self.phase = "fade-back"
+                self.state = self.FADE_BACK
                 self.start_time = current_time
-        elif self.phase == "fade-back":
+
+        elif self.state == self.FADE_BACK:
             if elapsed < self.fade_duration:
                 t = elapsed / self.fade_duration
                 self.stim.size = self.target_size - t * (self.target_size - self.init_size)
                 self.stim.opacity = self.target_opacity - t * (self.target_opacity - self.init_opacity)
                 self.stim.ori = self.current_angle * (1 - t)
             else:
-                self.phase = "complete"
-                self.stim.size = self.init_size
-                self.stim.opacity = self.init_opacity
-                self.stim.ori = 0
-                self.stim.pos = self.pos
+                self.state = self.COMPLETE
+                self.reset_stimulus()
 
-        # Draw the preloaded background stimuli for all shapes except the current one.
-        for shape, bg_stim in self.background_stimuli.items():
-            if shape != self.current_shape:
-                bg_stim.draw()
-        # Draw the looming shape.
+        self.draw()
+
+        return self.state == self.COMPLETE
+
+    def draw(self):
+        """Draw the current animation frame to the window"""
+        # Draw the background stimuli if available
+        if self.background_stimuli:
+            for shape, bg_stim in self.background_stimuli.items():
+                if shape != self.current_shape:
+                    bg_stim.draw()
+
+        # Draw the animated stimulus
         self.stim.draw()
         self.win.flip()
+    def reset_stimulus(self):
+        """Reset the stimulus to its initial state"""
+        self.stim.size = self.init_size
+        self.stim.opacity = self.init_opacity
+        self.stim.ori = 0
+        self.stim.pos = self.pos
 
-        return self.phase == "complete"
+    def run_to_completion(self):
+        """
+        Run the full animation sequence from start to finish
+        without requiring manual updates.
+        """
+        from psychopy import core
+
+        # Run the looming phase
+        looming_end = core.getTime() + self.loom_duration
+        while core.getTime() < looming_end:
+            self.update()
+
+        # Run the jiggling phase
+        jiggling_end = core.getTime() + self.jiggle_duration
+        while core.getTime() < jiggling_end:
+            self.update()
+
+        # Run the fade-back phase
+        fade_end = core.getTime() + self.fade_duration
+        while core.getTime() < fade_end:
+            self.update()
+
+        # Ensure we're fully complete
+        self.state = self.COMPLETE
+        self.reset_stimulus()
+        self.draw()

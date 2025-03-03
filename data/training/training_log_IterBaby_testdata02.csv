@@ -1,0 +1,4 @@
+trial_num,phase,timestamp,event_type,shape,position,additional_info
+1,training,14.99672679998912,trial_start,all,,shape_order=circle-cross-star-t
+1,training,16.007773499994073,fixator_end,all,,
+1,training,16.024916400026996,animation_start,circle,"(-480.0, -270.0)",sequence_position=1/4
