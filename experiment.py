@@ -4,6 +4,7 @@ import os
 import pygaze
 from pygaze import settings, libscreen, eyetracker
 from utils import *
+from data_logger import *
 import tobii_research as tr
 from psychopy.hardware import keyboard
 
@@ -33,6 +34,8 @@ class InfantEyetrackingExperiment:
                     }
         self.init_size = 300
         self.init_opacity = .3
+        self.current_trial = 0
+        self.last_selection_time = 0
         # Setup subject info
         self.subjInfo = {
             '1': {'name': 'subjCode',
@@ -90,6 +93,9 @@ class InfantEyetrackingExperiment:
 
         # Pre-experiment setup: subject info entry and data file initialization.
         self.initialize_subj_info()
+
+        self.data_logger = DataLogger(self)
+
         self.setup_display()
         self.setup_exp_paths()
         self.setup_input_devices()
@@ -98,6 +104,15 @@ class InfantEyetrackingExperiment:
         self.display_start_screen()
 
         self.logger.info("Experiment initialized with configuration.")
+
+    def get_experiment_data(self, key, default=None):
+        """Access method for the data logger to get experiment variables"""
+        if key == 'subjVariables':
+            return self.subjVariables
+        elif key == 'tracker':
+            return self.tracker if hasattr(self, 'tracker') else None
+        # Add other needed variables
+        return default
 
     def initialize_subj_info(self):
         """
@@ -144,77 +159,6 @@ class InfantEyetrackingExperiment:
                 fileOpened = False
                 popupError('That subject code already exists!')
                 self.logger.error("Duplicate subject code detected; prompting for new input.")
-
-        # Now that we have validated the subject code, initialize all output files
-        self.initialize_output_files()
-
-    def initialize_output_files(self):
-        """
-        Initialize all output files for the experiment, including:
-        1. Training data log
-        2. Traditional tracking data file (compatible with existing code)
-        3. Gaze-triggered selection data
-        4. Selection sequence data (for next child in chain)
-
-        Creates appropriate directories if they don't exist.
-        """
-        # Define file paths
-        data_dir = os.path.join("data")
-        training_dir = os.path.join(data_dir, "training")
-        selections_dir = os.path.join(data_dir, "selections")
-        sequence_dir = os.path.join(data_dir, "sequences")
-        active_test_dir = os.path.join(data_dir, "activeTest")
-
-        # Create directories if they don't exist
-        for directory in [data_dir, training_dir, selections_dir, sequence_dir, active_test_dir]:
-            os.makedirs(directory, exist_ok=True)
-
-        # 1. Initialize legacy files for backward compatibility
-        training_filepath = os.path.join(training_dir, f"tracking_data_{self.subjVariables['subjCode']}.txt")
-        self.trainingOutputFile = open(training_filepath, 'w')
-
-        self.results_filepath = os.path.join(active_test_dir, f"tracking_data_{self.subjVariables['subjCode']}.txt")
-        # self.results_file = open(self.results_filepath, 'w')  # Uncomment if needed
-
-        # 2. Training data log - contains trial information and timestamps
-        self.training_log_path = os.path.join(training_dir, f"training_log_{self.subjVariables['subjCode']}.csv")
-        with open(self.training_log_path, 'w', newline='') as f:
-            writer = csv.writer(f)
-            writer.writerow([
-                'trial_num', 'phase', 'timestamp', 'event_type',
-                'shape', 'position', 'additional_info'
-            ])
-
-        # 3. Gaze-triggered selection data - contains detailed information about each selection
-        self.selection_data_path = os.path.join(selections_dir, f"selections_{self.subjVariables['subjCode']}.csv")
-        with open(self.selection_data_path, 'w', newline='') as f:
-            writer = csv.writer(f)
-            writer.writerow([
-                'trial_num', 'selection_num', 'timestamp', 'shape', 'position',
-                'fixation_duration_ms', 'rt_from_trial_start_ms', 'rt_from_previous_selection_ms',
-                'queued_selection', 'was_executed'
-            ])
-
-        # 4. Sequence data - simplified format containing just the sequence of selections
-        #    This is what will be used for the next child in the chain
-        self.sequence_data_path = os.path.join(sequence_dir, f"sequence_{self.subjVariables['subjCode']}.csv")
-        with open(self.sequence_data_path, 'w', newline='') as f:
-            writer = csv.writer(f)
-            writer.writerow([
-                'trial_num', 'selection_order', 'shape_sequence', 'position_sequence',
-                'timing_sequence_ms'
-            ])
-
-        self.logger.info(f"Output files initialized:")
-        self.logger.info(f"  Training file: {training_filepath}")
-        self.logger.info(f"  Training log: {self.training_log_path}")
-        self.logger.info(f"  Selection data: {self.selection_data_path}")
-        self.logger.info(f"  Sequence data: {self.sequence_data_path}")
-
-        # Initialize tracking variables
-        self.current_trial = 0
-        self.last_selection_time = 0
-        self.trial_selections = []  # Will store selections for current trial
 
     def setup_exp_paths(self):
         """
@@ -303,9 +247,6 @@ class InfantEyetrackingExperiment:
         self.logger.info(f"Selection data will be recorded to {self.selection_csv_path}")
 
         # Initialize tracking variables for recording
-        self.current_trial = 0
-        self.last_selection_time = 0
-
 
     def load_stimuli(self):
         loadScreen = libscreen.Screen()
@@ -413,193 +354,26 @@ class InfantEyetrackingExperiment:
         print(f"Key pressed: {key}")
         self.disp.show()
 
-    def log_training_events(self, trial_num, current_shape, event_type):
-        """
-        Log events during the training phase to the eyetracker.
-
-        Parameters:
-        -----------
-        trial_num : int
-            Current trial number
-        current_shape : str
-            The shape being presented/animated (e.g., "circle", "cross")
-        event_type : str
-            The type of event (e.g., "trial_start", "animation_start", "animation_end")
-        """
-        if self.subjVariables.get('eyetracker') == "yes" and hasattr(self, 'tracker'):
-            timestamp = core.getTime()
-            log_message = f"training_trial_{trial_num}_{current_shape}_{event_type}_{timestamp}"
-            self.logger.info(f"Logging eyetracker event: {log_message}")
-            self.tracker.log(log_message)
-
-    def log_trial_event(self, trial_num, phase, event_type, shape="all", position="", additional_info=""):
-        """
-        Log an event during a trial to the training log file and eyetracker.
-
-        Parameters:
-        -----------
-        trial_num : int
-            Current trial number
-        phase : str
-            "training" or "gaze_triggered"
-        event_type : str
-            Type of event (e.g., "trial_start", "animation_begin", "fixation")
-        shape : str
-            The shape involved (or "all" for events involving all shapes)
-        position : str
-            Position of the shape (if applicable)
-        additional_info : str
-            Any additional information to log
-
-        Returns:
-        --------
-        float
-            Timestamp when the event was logged
-        """
-        timestamp = core.getTime()
-
-        # Log to training CSV file
-        with open(self.training_log_path, 'a', newline='') as f:
-            writer = csv.writer(f)
-            writer.writerow([
-                trial_num, phase, timestamp, event_type,
-                shape, position, additional_info
-            ])
-
-        # Also log to eyetracker if available
-        if self.subjVariables.get('eyetracker') == "yes" and hasattr(self, 'tracker'):
-            log_message = f"{phase}_trial{trial_num}_{event_type}"
-            if shape != "all":
-                log_message += f"_{shape}"
-            if position:
-                log_message += f"_{position}"
-
-            self.tracker.log(log_message)
-
-        return timestamp  # Return time for convenience in calling functions
-
-    def log_selection(self, trial_num, selection_num, shape, position, fixation_duration,
-                      queued=False, was_executed=True, selection_time=None):
-        """
-        Log a selection event to both eyetracker and CSV files.
-
-        Parameters:
-        -----------
-        trial_num : int
-            Current trial number
-        selection_num : int
-            Current selection number within the trial
-        shape : str
-            Selected shape name
-        position : str or tuple
-            Position of the selected shape
-        fixation_duration : float
-            Duration of fixation before selection (in seconds)
-        queued : bool
-            Whether this selection was queued (not immediately executed)
-        was_executed : bool
-            Whether the selection was actually shown to the infant
-            - If queued=True, this should typically be False when initially logged
-            - Later, when the queued selection is actually shown, this should be True
-        selection_time : float, optional
-            Timestamp when selection occurred. If None, uses current time.
-        """
-        # Get current time if not provided
-        if selection_time is None:
-            selection_time = core.getTime()
-
-        # Format position as string if it's a tuple
-        position_str = str(position) if isinstance(position, (list, tuple)) else position
-
-        # Calculate relative timestamps (in milliseconds)
-        rt_from_trial_start = (selection_time - self.trial_start_time) * 1000  # Convert to ms
-
-        if self.last_selection_time > 0:
-            rt_from_previous = (selection_time - self.last_selection_time) * 1000  # Convert to ms
-        else:
-            rt_from_previous = rt_from_trial_start
-
-        # Update last selection time and record in trial_selections ONLY if
-        # this selection was actually shown to the infant (was_executed=True)
-        if was_executed:
-            self.last_selection_time = selection_time
-
-            # Only add to trial_selections if it was actually shown to the infant
-            self.trial_selections.append({
-                'shape': shape,
-                'position': position_str,
-                'timestamp': selection_time,
-                'rt_from_trial_start': rt_from_trial_start
-            })
-
-        # Log to selection data CSV
-        with open(self.selection_data_path, 'a', newline='') as f:
-            writer = csv.writer(f)
-            writer.writerow([
-                trial_num,
-                selection_num,
-                selection_time,
-                shape,
-                position_str,
-                fixation_duration * 1000,  # Convert to ms
-                rt_from_trial_start,
-                rt_from_previous,
-                queued,
-                was_executed  # This should be False for queued selections until they're shown
-            ])
-
-        # Log to eyetracker
-        if self.subjVariables.get('eyetracker') == "yes" and hasattr(self, 'tracker'):
-            # Create a descriptive event message
-            event_type = "queued" if queued else "direct"
-            execution = "executed" if was_executed else "discarded"
-
-            log_message = (f"selection_trial{trial_num}_num{selection_num}_{shape}_"
-                           f"{event_type}_{execution}_duration{int(fixation_duration * 1000)}ms")
-
-            self.logger.info(f"Logging to eyetracker: {log_message}")
-            self.tracker.log(log_message)
-
-        # Also log to training log CSV for comprehensive record
-        event_type = "queued_selection" if queued else "selection"
-        additional_info = (f"executed={was_executed}, fixation_duration={int(fixation_duration * 1000)}ms, "
-                           f"rt={int(rt_from_trial_start)}ms")
-
-        self.log_trial_event(
-            trial_num,
-            "gaze_triggered",
-            event_type,
-            shape,
-            position_str,
-            additional_info
-        )
-
-        self.logger.info(
-            f"Selection logged: Trial {trial_num}, Selection {selection_num}, Shape {shape}, Queued={queued}")
-        return selection_time  # Return time for convenience in calling functions
-
     def run_training_trial(self):
         # --- Phase 0: Setup eyetracking ---
         # Increment trial counter
         self.current_trial += 1
-
-        # Record trial start time
         self.trial_start_time = core.getTime()
+        # Record trial start time
+        self.data_logger.trial_start_time = self.trial_start_time
+        self.data_logger.current_trial = self.current_trial
 
         # Start eyetracking recording for this trial
         if self.subjVariables.get('eyetracker') == "yes":
             self.tracker.start_recording()
 
         # Log trial start
-        self.log_trial_event(
+        self.data_logger.log_trial_event(
             trial_num=self.current_trial,
             phase="training",
             event_type="trial_start",
             additional_info=f"shape_order={'-'.join(self.shape_order)}"
         )
-
-        # Log trial start
-        self.log_training_events(self.current_trial, "all", "trial_start")
 
         # --- Phase 1: Show preloaded static shapes with a spinning wheel ---
         spin_duration = 1 #second
@@ -612,7 +386,7 @@ class InfantEyetrackingExperiment:
             self.fixator_stim.draw()
             self.win.flip()
 
-        self.log_trial_event(
+        self.data_logger.log_trial_event(
             trial_num=self.current_trial,
             phase="training",
             event_type="fixator_end"
@@ -625,7 +399,7 @@ class InfantEyetrackingExperiment:
         # Sequentially animate each shape in order.
         for shape_index, shape in enumerate(self.shape_order):
             self.logger.info(f"Animating shape: {shape}")
-            animation_start_time = self.log_trial_event(
+            animation_start_time = self.data_logger.log_trial_event(
                 trial_num=self.current_trial,
                 phase="training",
                 event_type="animation_start",
@@ -658,7 +432,7 @@ class InfantEyetrackingExperiment:
 
             current_time = core.getTime()
 
-            self.log_trial_event(
+            self.data_logger.log_trial_event(
                 trial_num=self.current_trial,
                 phase="training",
                 event_type="animation_end",
@@ -670,7 +444,7 @@ class InfantEyetrackingExperiment:
             draw_static_shapes(self.preloaded_static_stimuli)
             self.win.flip()
 
-        self.log_trial_event(
+        self.data_logger.log_trial_event(
             trial_num=self.current_trial,
             phase="training",
             event_type="trial_end",
@@ -684,6 +458,9 @@ class InfantEyetrackingExperiment:
 
         # Increment trial counter
         self.current_trial += 1
+        self.data_logger.current_trial = self.current_trial
+        # initialize trial in data_logger
+        self.data_logger.start_trial(self.current_trial)
 
         # Reset last selection time for new trial
         self.last_selection_time = 0
@@ -706,7 +483,7 @@ class InfantEyetrackingExperiment:
         if self.subjVariables.get('eyetracker') == "yes":
             self.tracker.start_recording()
 
-        self.log_trial_event(
+        self.data_logger.log_trial_event(
             trial_num=self.current_trial,
             phase="gaze_triggered",
             event_type="trial_start",
@@ -714,9 +491,16 @@ class InfantEyetrackingExperiment:
         )
 
         self.trial_start_time = core.getTime()
+        # Record trial start time
+        self.data_logger.trial_start_time = self.trial_start_time
+
+        last_selection_time = self.trial_start_time
+
         max_trial_time = 15  # seconds
         required_fixation = 0.33  # seconds
         selection_count = 0
+        selection_timeout = 5 # sections - max time between selections
+        initial_selection_timeout = 5 #seconds - max time to wait for first selection
 
         # Setup dictionaries.
         gaze_histories = {shape: [] for shape in self.shape_order}
@@ -736,6 +520,22 @@ class InfantEyetrackingExperiment:
 
             current_time = core.getTime()
 
+            if selection_count == 0 and (current_time - self.trial_start_time) > initial_selection_timeout:
+                self.logger.info(
+                    f"No initial selection made within {initial_selection_timeout} seconds; terminating trial early.")
+                break
+
+            if selection_count > 0 and selection_count < 4 and active_animation is None and (
+                    current_time - last_selection_time) > selection_timeout:
+                self.logger.info(
+                    f"No selection for {selection_timeout} seconds after previous selection; terminating trial early.")
+                break
+
+            if self.subjVariables.get('eyetracker') == "yes":
+                gaze_sample = self.tracker.sample()
+            else:
+                gaze_sample = None
+
             # Update active animation.
             if active_animation is not None:
                 if active_animation.update(current_time):
@@ -750,9 +550,10 @@ class InfantEyetrackingExperiment:
                     # At this point, the queued animation is being activated,
                     # so we need to log it as an executed (non-queued) selection
                     selection_count += 1
+                    last_selection_time = current_time
 
                     # Log that the queued selection is now being executed
-                    self.log_selection(
+                    self.data_logger.log_selection(
                         trial_num=self.current_trial,
                         selection_num=selection_count,  # This is the current selection number
                         shape=queued_animation.current_shape,
@@ -764,17 +565,6 @@ class InfantEyetrackingExperiment:
 
                     active_animation = queued_animation
                     queued_animation = None
-
-            # Get a gaze sample.
-            if self.subjVariables.get('eyetracker') == "yes":
-                gaze_sample = self.tracker.sample()
-            else:
-                gaze_sample = None  # Optionally simulate gaze input.
-
-            if gaze_sample is None:
-                if (current_time - self.trial_start_time) > 5:
-                    self.logger.info("No gaze detected for 5 seconds; displaying re-cue.")
-                continue
 
             self.logger.info(gaze_sample)
             # Process gaze sample for each shape.
@@ -791,10 +581,11 @@ class InfantEyetrackingExperiment:
                         # Immediate trigger only if no animation is active and we haven't reached 4.
                         if active_animation is None and selection_count < 4:
                             selection_count += 1
+                            last_selection_time = current_time
                             self.logger.info(f"Shape {shape} triggered via fixation (immediate).")
 
                             # Log the selection event
-                            self.log_selection(
+                            self.data_logger.log_selection(
                                 trial_num=self.current_trial,
                                 selection_num=selection_count,
                                 shape=shape,
@@ -834,7 +625,7 @@ class InfantEyetrackingExperiment:
                                 self.logger.info(f"Shape {shape} queued as next candidate (N+1)")
 
                                 # Log the queued selection - note was_executed=False because it's not shown yet
-                                self.log_selection(
+                                self.data_logger.log_selection(
                                     trial_num=self.current_trial,
                                     selection_num=selection_count + 1,  # This will be the next selection number
                                     shape=shape,
@@ -878,7 +669,7 @@ class InfantEyetrackingExperiment:
             # End of trial processes
             # 1. Mark any queued selection that wasn't executed
             if queued_animation is not None:
-                self.log_selection(
+                self.data_logger.log_selection(
                     trial_num=self.current_trial,
                     selection_num=selection_count + 1,
                     shape=queued_animation.current_shape,
@@ -889,14 +680,14 @@ class InfantEyetrackingExperiment:
                 )
 
             # 2. Record trial summary
-            self.end_trial(self.current_trial)
+        self.data_logger.end_trial(self.current_trial)
 
-            # 3. Stop eyetracker recording
+         # 3. Stop eyetracker recording
 
-            if self.subjVariables.get('eyetracker') == "yes":
-                self.tracker.stop_recording()
+        if self.subjVariables.get('eyetracker') == "yes":
+            self.tracker.stop_recording()
 
-            self.logger.info(f"Gaze-triggered trial {self.current_trial} completed with {selection_count} selections")
+        return selection_count
 
     def run_ag_trial(self, video_name):
         """
@@ -914,40 +705,58 @@ class InfantEyetrackingExperiment:
             self.tracker.start_recording()
 
         # Log trial start
-        current_time = self.log_trial_event(
+        current_time = self.data_logger.log_trial_event(
             trial_num=self.current_trial,
-            phase="attention_getter",
-            event_type="video_start",
+            phase="AG",
+            event_type="videoStart",
             shape="all",
             position="center",
             additional_info=f"video={video_name}"
         )
+        audio_played = False
+        if video_name in self.AGsoundMatrix:
+            audio = self.AGsoundMatrix[video_name]
+            audio.play()
+            audio_played = True
+            self.logger.info(f"Playing audio: {video_name}")
+        else:
+            self.logger.warning(f"No matching audio found for {video_name}")
 
         # Find the video in our loaded movies
         if video_name in self.AGmovieMatrix:
             video = self.AGmovieMatrix[video_name]
-
+            video.size = (self.x_length, self.y_length)
+            video.pos = (0,0)
             # Set the video to loop if it's too short
             video.loop = False  # Only play once
             video.play()
 
             # Keep track of starting time
             start_time = core.getTime()
-
+            total_ag_duration = 5.0
             # Continue displaying until the movie is finished
-            while not video.isFinished:
+            while not video.isFinished and (core.getTime() - start_time) < total_ag_duration:
                 video.draw()
                 self.win.flip()
+
+            remaining_time = total_ag_duration - (core.getTime() - start_time)
+            if remaining_time > 0:
+                # Show black screen but continue playing audio
+                self.disp.fill(self.blackScreen)
+                self.disp.show()
+                core.wait(remaining_time)
 
             # Stop the video
             video.stop()
 
+            if audio_played:
+                audio.stop()
             # Log duration
             elapsed = core.getTime() - start_time
-            self.log_trial_event(
+            self.data_logger.log_trial_event(
                 trial_num=self.current_trial,
-                phase="attention_getter",
-                event_type="video_end",
+                phase="AG",
+                event_type="videoEnd",
                 shape="all",
                 position="center",
                 additional_info=f"video={video_name}, duration={elapsed:.2f}s"
@@ -956,13 +765,15 @@ class InfantEyetrackingExperiment:
             self.logger.error(f"Attention-getter video {video_name} not found in loaded videos")
             # Display a fallback animation if video is not available
             self.display_fallback_ag()
+            if audio_played:
+                audio.stop()
 
         # Stop eyetracking recording
         if self.subjVariables.get('eyetracker') == "yes":
             self.tracker.stop_recording()
 
         # Short pause after the video
-        core.wait(0.5)
+        core.wait(1)
 
     def display_fallback_ag(self):
         """
@@ -973,11 +784,7 @@ class InfantEyetrackingExperiment:
 
         # Create a simple colorful circle
         circle = visual.Circle(
-            self.win,
-            radius=300,
-            fillColor="red",
-            lineColor=None,
-            pos=(0, 0)
+            self.win, radius=300, fillColor="red", lineColor=None, pos=(0, 0)
         )
 
         # Animation duration
@@ -1000,67 +807,6 @@ class InfantEyetrackingExperiment:
             circle.draw()
             self.win.flip()
 
-    def end_trial(self, trial_num):
-        """
-        End a trial and record the sequence of selections to the sequence file.
-        This function summarizes the trial data and writes it to the sequence file.
-
-        Parameters:
-        -----------
-        trial_num : int
-            The trial number that is ending
-        """
-        # Only process if we have selections
-        if not self.trial_selections:
-            self.logger.info(f"Trial {trial_num} ended with no selections")
-            return
-
-        # Extract sequences
-        shapes = [s['shape'] for s in self.trial_selections]
-        positions = [s['position'] for s in self.trial_selections]
-
-        # Calculate timing sequence (time between selections)
-        timestamps = [s['timestamp'] for s in self.trial_selections]
-        timing_ms = []
-        for i in range(1, len(timestamps)):
-            timing_ms.append(int((timestamps[i] - timestamps[i - 1]) * 1000))  # Convert to ms
-
-        # Add first timing (from trial start)
-        first_timing = int((timestamps[0] - self.trial_start_time) * 1000)  # Convert to ms
-        timing_ms = [first_timing] + timing_ms
-
-        # Format sequences as comma-separated strings
-        shape_sequence = ",".join(shapes)
-        position_sequence = ",".join([str(p) for p in positions])
-        timing_sequence = ",".join([str(t) for t in timing_ms])
-
-        # Write to sequence file
-        with open(self.sequence_data_path, 'a', newline='') as f:
-            writer = csv.writer(f)
-            writer.writerow([
-                trial_num,
-                len(shapes),
-                shape_sequence,
-                position_sequence,
-                timing_sequence
-            ])
-
-        # Log trial summary information
-        summary_info = (f"shapes={shape_sequence}, positions={position_sequence}, "
-                        f"timings={timing_sequence}")
-
-        self.log_trial_event(
-            trial_num=trial_num,
-            phase="gaze_triggered",
-            event_type="trial_end",
-            additional_info=f"selections={len(shapes)}, {summary_info}"
-        )
-
-        self.logger.info(f"Trial {trial_num} ended with {len(shapes)} selections: {shape_sequence}")
-
-        # Reset trial selections for next trial
-        self.trial_selections = []
-
     def _fixation_duration(self, gaze_history):
         if not gaze_history:
             return 0
@@ -1073,8 +819,8 @@ class InfantEyetrackingExperiment:
         Run the training phase with interleaved attention-getter videos.
         """
         self.logger.info("Starting training phase.")
-        n_training_blocks = 2
-        n_training_trials = 2
+        n_training_blocks = 1
+        n_training_trials = 1
         # Loop through each training block
         for block in range(1, n_training_blocks + 1):
             self.logger.info(f"Starting training block {block} of {n_training_blocks}")
@@ -1090,10 +836,49 @@ class InfantEyetrackingExperiment:
         self.logger.info("Training phase completed.")
 
     def run_gaze_triggered_phase(self):
+        """
+        Run the gaze-triggered phase with adaptive trial management.
+        Initially attempts 3 trials. If poor engagement, plays attention-getter
+        and attempts 6 more trials for a maximum of 9 attempts.
+        Continues until 3 successful trials (with all 4 shapes selected).
+        """
+
         self.logger.info("Starting gaze-triggered phase.")
-        n_trials = 3  # You can adjust this or retrieve from self.config, e.g., self.config.get('n_training_trials', 5)
-        for trial in range(1, n_trials + 1):
-            self.logger.info(f"Starting test trial {trial} of {n_trials}.")
-            self.run_gt_trial()
-            core.wait(0.5)
-        self.logger.info("Gaze-triggered phase completed.")
+
+        consecutive_failures_for_ag = 3
+        max_total_attempts = 9
+        required_successful_trials = 3
+
+        trial_attempts = 0
+        successful_trials = 0
+        consecutive_failures = 0
+
+        while trial_attempts < max_total_attempts and successful_trials < required_successful_trials:
+            if consecutive_failures >= consecutive_failures_for_ag:
+                self.logger.info(
+                    f"Playing attention-getter after {consecutive_failures} consecutive unsuccessful trials")
+                ag_video = self.get_next_ag_video()
+                if ag_video:
+                    self.run_ag_trial(ag_video)
+                consecutive_failures = 0
+
+            trial_attempts += 1
+            self.logger.info(f"Starting test trial {trial_attempts} of maximum {max_total_attempts}")
+
+            selections_made = self.run_gt_trial()
+
+            if selections_made == 4:
+                successful_trials += 1
+                consecutive_failures = 0  # Reset consecutive failures counter
+                self.logger.info(f"Successful trial completed ({successful_trials} of {required_successful_trials}).")
+            else:
+                consecutive_failures += 1
+                self.logger.info(
+                    f"Trial completed with only {selections_made} selections. Consecutive unsuccessful trials: {consecutive_failures}")
+
+            if successful_trials >= required_successful_trials:
+                self.logger.info(f"Gaze-triggered phase completed successfully with {successful_trials} valid trials.")
+            else:
+                self.logger.info(
+                    f"Gaze-triggered phase ended after {trial_attempts} attempts with only {successful_trials} valid trials.")
+
