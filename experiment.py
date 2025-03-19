@@ -259,6 +259,7 @@ class InfantEyetrackingExperiment:
         selectionSoundMatrix = loadFiles(os.path.join(self.soundPath, 'selection'), ['.mp3', '.wav'], 'sound')
         loomSoundMatrix = loadFiles(os.path.join(self.soundPath, 'loom'), ['.mp3', '.wav'], 'sound')
         self.AGsoundMatrix = loadFiles(self.AGPath, ['.mp3', '.wav'], 'sound')
+        self.stars = loadFiles(self.AGPath, ['.jpg'], 'image', self.win)
 
         self.image_files = {
             "circle": os.path.join(self.imagePath, "circle.png"),
@@ -332,14 +333,16 @@ class InfantEyetrackingExperiment:
         }
 
         self.shapeAOIs = {}
-        aoi_width = 450
-        aoi_height = 450
+        aoi_width = 500
+        aoi_height = 500
 
         for shape, pos in self.shape_positions.items():
-            pygaze_pos = psychopy_to_pygaze(pos)
+            pygaze_pos = psychopy_to_pygaze(pos, x_offset = aoi_width/2, y_offset = aoi_height/2)
+            print(pygaze_pos)
             self.shapeAOIs[shape] = aoi.AOI('rectangle', pos=pygaze_pos, size=(aoi_width, aoi_height))
 
         self.logger.info(f"Shape positions assigned: {self.shape_positions}")
+
 
     def display_start_screen(self):
         self.initialScreen = libscreen.Screen()
@@ -497,7 +500,7 @@ class InfantEyetrackingExperiment:
         last_selection_time = self.trial_start_time
 
         max_trial_time = 15  # seconds
-        required_fixation = 0.33  # seconds
+        required_fixation = 0.25  # seconds
         selection_count = 0
         selection_timeout = 5 # sections - max time between selections
         initial_selection_timeout = 5 #seconds - max time to wait for first selection
@@ -773,7 +776,8 @@ class InfantEyetrackingExperiment:
             self.tracker.stop_recording()
 
         # Short pause after the video
-        core.wait(1)
+        self.win.flip()
+        core.wait(.5)
 
     def display_fallback_ag(self):
         """
@@ -819,23 +823,34 @@ class InfantEyetrackingExperiment:
         Run the training phase with interleaved attention-getter videos.
         """
         self.logger.info("Starting training phase.")
-        n_training_blocks = 1
-        n_training_trials = 1
-        # Loop through each training block
-        for block in range(1, n_training_blocks + 1):
-            self.logger.info(f"Starting training block {block} of {n_training_blocks}")
 
-            # 1. Play an attention-getter video
-            ag_video = self.get_next_ag_video()
-            if ag_video:
-                self.run_ag_trial(ag_video)
-            for trial in range(1, n_training_trials + 1):
-                # 2. Run the training trial
-                self.run_training_trial()
+        n_training_blocks = 4
+        n_trials_per_block = 3
+
+        total_trials = n_training_blocks * n_trials_per_block
+        trials_between_ag = 4
+
+            # Play initial attention getter before starting
+        ag_video = self.get_next_ag_video()
+        if ag_video:
+            self.run_ag_trial(ag_video)
+
+        # Loop through each training block
+        for trial_num in range(1, total_trials + 1):
+            # Run the training trial
+            self.run_training_trial()
+            
+            # Play attention getter after every 'trials_between_ag' trials
+            # But don't play one after the very last trial
+            if trial_num % trials_between_ag == 0 and trial_num < total_trials:
+                ag_video = self.get_next_ag_video()
+                if ag_video:
+                    self.run_ag_trial(ag_video)
 
         self.logger.info("Training phase completed.")
 
     def run_gaze_triggered_phase(self):
+
         """
         Run the gaze-triggered phase with adaptive trial management.
         Initially attempts 3 trials. If poor engagement, plays attention-getter
@@ -882,3 +897,87 @@ class InfantEyetrackingExperiment:
                 self.logger.info(
                     f"Gaze-triggered phase ended after {trial_attempts} attempts with only {successful_trials} valid trials.")
 
+    def EndDisp(self):
+		# show the screen with no stars filled in
+		# self.stars['0'][0].draw()
+		# print(self.stars)
+		# win.flip()
+
+        curStar = self.stars['0'][0]
+        		# create screen
+        endScreen = libscreen.Screen()
+		# build screen
+        buildScreenPsychoPy(endScreen, [curStar])
+
+		# present screen
+        setAndPresentScreen(self.disp, endScreen)
+
+        core.wait(1)
+
+		# iterate to fill in each star
+        for i in range(1, 6, 1):
+            # self.stars[str(i)][0].draw()
+            #  win.flip()
+            curStar = self.stars[str(i)][0]
+            curStar.size = (self.x_length, self.y_length)
+            # build screen
+            buildScreenPsychoPy(endScreen, [curStar])
+            # present screen
+            setAndPresentScreen(self.disp, endScreen)
+
+            self.AGsoundMatrix['ding'].play()
+            core.wait(.5)
+            self.AGsoundMatrix['ding'].stop()
+
+		# have the stars jiggle
+        self.AGsoundMatrix['applause'].play()
+        self.AGsoundMatrix['done'].volume = 2
+        self.AGsoundMatrix['done'].play()
+
+        for i in range(4):
+            # self.stars['5'][0].draw()
+            # win.flip()
+            curStar = self.stars['5'][0]
+            curStar.size = (self.x_length, self.y_length)
+            # build screen
+            buildScreenPsychoPy(endScreen, [curStar])
+            # present screen
+            setAndPresentScreen(self.disp, endScreen)
+
+            core.wait(.5)
+            # self.stars['5_left'][0].draw()
+            # win.flip()
+
+            curStar = self.stars['5_left'][0]
+            curStar.size = (self.x_length, self.y_length)
+            # build screen
+            buildScreenPsychoPy(endScreen, [curStar])
+            # present screen
+            setAndPresentScreen(self.disp, endScreen)
+            core.wait(.5)
+
+            # self.stars['5'][0].draw()
+            # win.flip()
+            # core.wait(.5)
+            # self.stars['5_right'][0].draw()
+            # win.flip()
+            # core.wait(.5)
+
+            curStar = self.stars['5'][0]
+            curStar.size = (self.x_length, self.y_length)
+            # build screen
+            buildScreenPsychoPy(endScreen, [curStar])
+            # present screen
+            setAndPresentScreen(self.disp, endScreen)
+
+            core.wait(.5)
+            # self.stars['5_left'][0].draw()
+            # win.flip()
+
+            curStar = self.stars['5_right'][0]
+            curStar.size = (self.x_length, self.y_length)
+            # build screen
+            buildScreenPsychoPy(endScreen, [curStar])
+            # present screen
+            setAndPresentScreen(self.disp, endScreen)
+            core.wait(.5)

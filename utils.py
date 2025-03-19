@@ -228,25 +228,22 @@ def check_fixation(gaze_history, required_duration=0.5):
     return (end_time - start_time) >= required_duration
 
 
-def psychopy_to_pygaze(psychopy_coord, screen_width=1920, screen_height=1080, stim_width=300, stim_height=300):
+def psychopy_to_pygaze(psychopy_coord, screen_width=1920, screen_height=1080, y_offset=0, x_offset = 0):
     """
-    Converts a position from PsychoPy (centered) to pygaze (origin at bottom left)
-    and adjusts for stimulus size (assuming the PsychoPy coordinate is the center
-    of the stimulus and pygaze AOI is defined by the bottom-left corner).
+    Converts a position from PsychoPy (origin at center) to pygaze (origin at top left)
     
     Parameters:
       psychopy_coord: Tuple (x, y) in PsychoPy coordinates.
-      screen_width: Width of the pygaze screen (default 1920).
-      screen_height: Height of the pygaze screen (default 1080).
-      stim_width: Width of the stimulus in pixels (default 300).
-      stim_height: Height of the stimulus in pixels (default 300).
+      screen_width: Width of the screen (default 1920).
+      screen_height: Height of the screen (default 1080).
     
     Returns:
-      Tuple (x', y') representing the bottom-left coordinate for pygaze.
+      Tuple (x', y') representing the center coordinate for pygaze.
     """
     x, y = psychopy_coord
-    pyg_x = x + (screen_width / 2) - (stim_width / 2)
-    pyg_y = (screen_height / 2) - y - (stim_height / 2)
+    # Convert from center origin to top-left origin
+    pyg_x = x + (screen_width / 2) - x_offset
+    pyg_y = (screen_height / 2) - y - y_offset  # Flip y-axis (in psychopy, +y is up; in pygaze, +y is down)
     return (pyg_x, pyg_y)
 
 

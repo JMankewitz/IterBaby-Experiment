@@ -1,3 +1,7 @@
+# delete folders
+data/delete/*
+data/*/delete/
+eyetrackingData/delete/*
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

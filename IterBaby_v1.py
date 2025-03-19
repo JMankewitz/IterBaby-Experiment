@@ -10,8 +10,8 @@ def main():
     experiment = InfantEyetrackingExperiment(EXPERIMENT_CONFIG, logger)
     
     # Run each phase of the experiment
-    experiment.run_training_phase()
+    #experiment.run_training_phase()
     experiment.run_gaze_triggered_phase()
-
+    experiment.EndDisp()
 if __name__ == '__main__':
     main()
