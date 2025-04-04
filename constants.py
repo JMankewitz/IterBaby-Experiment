@@ -44,10 +44,10 @@ JOYTIMEOUT = None # None for no timeout, or a value in milliseconds
 
 # EYETRACKER
 # general
-DUMMYMODE = True # False for gaze contingent display, True for dummy mode (using mouse or joystick)
-
-TRACKERTYPE = 'dummy' # either 'smi', 'eyelink' or 'dummy' (NB: if DUMMYMODE is True, trackertype will be set to dummy automatically)
-#TRACKERTYPE = 'tobii'
+#DUMMYMODE = True # False for gaze contingent display, True for dummy mode (using mouse or joystick)
+DUMMYMODE = False
+#TRACKERTYPE = 'dummy' # either 'smi', 'eyelink' or 'dummy' (NB: if DUMMYMODE is True, trackertype will be set to dummy automatically)
+TRACKERTYPE = 'tobii'
 SACCVELTHRESH = 35 # degrees per second, saccade velocity threshold
 SACCACCTHRESH = 9500 # degrees per second, saccade acceleration threshold
 EVENTDETECTION = 'native'

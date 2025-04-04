@@ -499,17 +499,17 @@ class InfantEyetrackingExperiment:
 
         last_selection_time = self.trial_start_time
 
-        max_trial_time = 15  # seconds
+        max_trial_time = 20  # seconds
         required_fixation = 0.25  # seconds
         selection_count = 0
-        selection_timeout = 5 # sections - max time between selections
+        selection_timeout = 7 # seconds - max time between selections
         initial_selection_timeout = 5 #seconds - max time to wait for first selection
 
         # Setup dictionaries.
         gaze_histories = {shape: [] for shape in self.shape_order}
         triggered_flags = {shape: False for shape in self.shape_order}
         last_triggered = {shape: 0 for shape in self.shape_order}
-        cooldown = 0.5  # seconds cooldown
+        cooldown = 5.0  # seconds cooldown
 
         active_animation = None    # Currently running animation.
         queued_animation = None    # Candidate for the next animation.
@@ -554,6 +554,9 @@ class InfantEyetrackingExperiment:
                     # so we need to log it as an executed (non-queued) selection
                     selection_count += 1
                     last_selection_time = current_time
+                    for other_shape in self.shape_order:
+                        if other_shape != active_animation.current_shape:
+                            last_triggered[other_shape] = 0
 
                     # Log that the queued selection is now being executed
                     self.data_logger.log_selection(
@@ -577,12 +580,13 @@ class InfantEyetrackingExperiment:
                     fixation_duration = self._fixation_duration(gaze_histories[shape])
 
                     if fixation_duration >= required_fixation:
-                        # Enforce cooldown.
-                        if current_time - last_triggered[shape] < cooldown:
-                            continue
 
                         # Immediate trigger only if no animation is active and we haven't reached 4.
                         if active_animation is None and selection_count < 4:
+                            # Enforce cooldown.
+                            if current_time - last_triggered[shape] < cooldown:
+                                continue
+
                             selection_count += 1
                             last_selection_time = current_time
                             self.logger.info(f"Shape {shape} triggered via fixation (immediate).")
@@ -621,6 +625,9 @@ class InfantEyetrackingExperiment:
                             triggered_flags[shape] = True
                             gaze_histories[shape] = []
                             last_triggered[shape] = current_time
+                            for other_shape in self.shape_order:
+                                if other_shape != shape:
+                                    last_triggered[other_shape] = 0  # Reset cooldown for others
 
                         # If an animation is active, allow queuing only if selection_count is less than 3.
                         elif active_animation is not None and selection_count < 3:
@@ -659,7 +666,7 @@ class InfantEyetrackingExperiment:
                                 )
                                 triggered_flags[shape] = True
                                 gaze_histories[shape] = []
-                                last_triggered[shape] = current_time
+                                #last_triggered[shape] = current_time
                 else:
                     # Clear history if gaze is not on the AOI.
                     gaze_histories[shape] = []
@@ -860,7 +867,7 @@ class InfantEyetrackingExperiment:
 
         self.logger.info("Starting gaze-triggered phase.")
 
-        consecutive_failures_for_ag = 3
+        consecutive_failures_for_ag = 2
         max_total_attempts = 9
         required_successful_trials = 3
 
