@@ -1,0 +1,694 @@
+trial_num,phase,timestamp,event_type,shape,position,additional_info
+0,AG,1140.6982262999954,videoStart,all,center,video=balloons_5
+0,AG,1145.8754487999977,videoEnd,all,center,"video=balloons_5, duration=5.15s"
+1,training,1147.3896837000066,trial_start,all,,shape_order=circle-cross-star-t
+1,training,1148.4018994999933,fixator_end,all,,
+1,training,1148.4188031999947,animation_start,circle,"(-480.0, -270.0)",sequence_position=1/4
+1,training,1150.2166195000027,animation_end,circle,"(-480.0, -270.0)",duration=1798ms
+1,training,1150.234510299997,animation_start,cross,"(480.0, -270.0)",sequence_position=2/4
+1,training,1152.0223229999974,animation_end,cross,"(480.0, -270.0)",duration=1788ms
+1,training,1152.0355738999933,animation_start,star,"(-480.0, 270.0)",sequence_position=3/4
+1,training,1153.8491689000075,animation_end,star,"(-480.0, 270.0)",duration=1814ms
+1,training,1153.8673947000061,animation_start,t,"(480.0, 270.0)",sequence_position=4/4
+1,training,1155.6656557999959,animation_end,t,"(480.0, 270.0)",duration=1798ms
+1,training,1155.6829966000078,trial_end,all,,shapes_shown=circle-cross-star-t
+2,training,1156.6862627999944,trial_start,all,,shape_order=circle-cross-star-t
+2,training,1157.6974251000065,fixator_end,all,,
+2,training,1157.7156283999939,animation_start,circle,"(-480.0, -270.0)",sequence_position=1/4
+2,training,1159.5135230000014,animation_end,circle,"(-480.0, -270.0)",duration=1798ms
+2,training,1159.5307733999944,animation_start,cross,"(480.0, -270.0)",sequence_position=2/4
+2,training,1161.345564400006,animation_end,cross,"(480.0, -270.0)",duration=1815ms
+2,training,1161.3600645999977,animation_start,star,"(-480.0, 270.0)",sequence_position=3/4
+2,training,1163.1282670000073,animation_end,star,"(-480.0, 270.0)",duration=1768ms
+2,training,1163.1462674000068,animation_start,t,"(480.0, 270.0)",sequence_position=4/4
+2,training,1164.9277105999936,animation_end,t,"(480.0, 270.0)",duration=1781ms
+2,training,1164.9456613999937,trial_end,all,,shapes_shown=circle-cross-star-t
+3,training,1165.9631479999953,trial_start,all,,shape_order=circle-cross-star-t
+3,training,1166.977484300005,fixator_end,all,,
+3,training,1166.9940029999998,animation_start,circle,"(-480.0, -270.0)",sequence_position=1/4
+3,training,1168.7937724999938,animation_end,circle,"(-480.0, -270.0)",duration=1800ms
+3,training,1168.811841600007,animation_start,cross,"(480.0, -270.0)",sequence_position=2/4
+3,training,1170.6263766000047,animation_end,cross,"(480.0, -270.0)",duration=1815ms
+3,training,1170.6445968000044,animation_start,star,"(-480.0, 270.0)",sequence_position=3/4
+3,training,1172.4592923000018,animation_end,star,"(-480.0, 270.0)",duration=1815ms
+3,training,1172.4767792000057,animation_start,t,"(480.0, 270.0)",sequence_position=4/4
+3,training,1174.275770399996,animation_end,t,"(480.0, 270.0)",duration=1799ms
+3,training,1174.2922740000067,trial_end,all,,shapes_shown=circle-cross-star-t
+4,training,1175.3078435000061,trial_start,all,,shape_order=circle-cross-star-t
+4,training,1176.324377900004,fixator_end,all,,
+4,training,1176.342892700006,animation_start,circle,"(-480.0, -270.0)",sequence_position=1/4
+4,training,1178.1575994000013,animation_end,circle,"(-480.0, -270.0)",duration=1815ms
+4,training,1178.1758040999994,animation_start,cross,"(480.0, -270.0)",sequence_position=2/4
+4,training,1179.9905721999967,animation_end,cross,"(480.0, -270.0)",duration=1815ms
+4,training,1180.0074017000006,animation_start,star,"(-480.0, 270.0)",sequence_position=3/4
+4,training,1181.8234182000015,animation_end,star,"(-480.0, 270.0)",duration=1816ms
+4,training,1181.8404538000032,animation_start,t,"(480.0, 270.0)",sequence_position=4/4
+4,training,1183.6400660999934,animation_end,t,"(480.0, 270.0)",duration=1800ms
+4,training,1183.6567437000049,trial_end,all,,shapes_shown=circle-cross-star-t
+4,AG,1184.673967499999,videoStart,all,center,video=bouncyballs_5
+4,AG,1189.8511009000067,videoEnd,all,center,"video=bouncyballs_5, duration=5.14s"
+5,training,1191.3664392000064,trial_start,all,,shape_order=circle-cross-star-t
+5,training,1192.368661600005,fixator_end,all,,
+5,training,1192.3873123999947,animation_start,circle,"(-480.0, -270.0)",sequence_position=1/4
+5,training,1194.2009700000053,animation_end,circle,"(-480.0, -270.0)",duration=1814ms
+5,training,1194.2195329999959,animation_start,cross,"(480.0, -270.0)",sequence_position=2/4
+5,training,1196.0341721000004,animation_end,cross,"(480.0, -270.0)",duration=1815ms
+5,training,1196.051695999995,animation_start,star,"(-480.0, 270.0)",sequence_position=3/4
+5,training,1197.8672262000036,animation_end,star,"(-480.0, 270.0)",duration=1816ms
+5,training,1197.8855617999943,animation_start,t,"(480.0, 270.0)",sequence_position=4/4
+5,training,1199.6668013000017,animation_end,t,"(480.0, 270.0)",duration=1781ms
+5,training,1199.6842005999933,trial_end,all,,shapes_shown=circle-cross-star-t
+6,training,1200.7007643999968,trial_start,all,,shape_order=circle-cross-star-t
+6,training,1201.716797400004,fixator_end,all,,
+6,training,1201.7331935999973,animation_start,circle,"(-480.0, -270.0)",sequence_position=1/4
+6,training,1203.5326096000063,animation_end,circle,"(-480.0, -270.0)",duration=1799ms
+6,training,1203.5508518999995,animation_start,cross,"(480.0, -270.0)",sequence_position=2/4
+6,training,1205.365578500001,animation_end,cross,"(480.0, -270.0)",duration=1815ms
+6,training,1205.383049199998,animation_start,star,"(-480.0, 270.0)",sequence_position=3/4
+6,training,1207.1976695000048,animation_end,star,"(-480.0, 270.0)",duration=1815ms
+6,training,1207.2163220999937,animation_start,t,"(480.0, 270.0)",sequence_position=4/4
+6,training,1208.9971138999972,animation_end,t,"(480.0, 270.0)",duration=1781ms
+6,training,1209.0146010000026,trial_end,all,,shapes_shown=circle-cross-star-t
+7,training,1210.0305785999954,trial_start,all,,shape_order=circle-cross-star-t
+7,training,1211.0470281000016,fixator_end,all,,
+7,training,1211.0640282999957,animation_start,circle,"(-480.0, -270.0)",sequence_position=1/4
+7,training,1212.8805960000027,animation_end,circle,"(-480.0, -270.0)",duration=1817ms
+7,training,1212.8971315999952,animation_start,cross,"(480.0, -270.0)",sequence_position=2/4
+7,training,1214.6961594000022,animation_end,cross,"(480.0, -270.0)",duration=1799ms
+7,training,1214.7133931999997,animation_start,star,"(-480.0, 270.0)",sequence_position=3/4
+7,training,1216.5280100999953,animation_end,star,"(-480.0, 270.0)",duration=1815ms
+7,training,1216.5462686999963,animation_start,t,"(480.0, 270.0)",sequence_position=4/4
+7,training,1218.3616398000013,animation_end,t,"(480.0, 270.0)",duration=1815ms
+7,training,1218.379478200004,trial_end,all,,shapes_shown=circle-cross-star-t
+8,training,1219.3963177999976,trial_start,all,,shape_order=circle-cross-star-t
+8,training,1220.4100391999964,fixator_end,all,,
+8,training,1220.4272957000067,animation_start,circle,"(-480.0, -270.0)",sequence_position=1/4
+8,training,1222.2434479000076,animation_end,circle,"(-480.0, -270.0)",duration=1816ms
+8,training,1222.2599443000072,animation_start,cross,"(480.0, -270.0)",sequence_position=2/4
+8,training,1224.059429300003,animation_end,cross,"(480.0, -270.0)",duration=1799ms
+8,training,1224.0762110000069,animation_start,star,"(-480.0, 270.0)",sequence_position=3/4
+8,training,1225.8744989999977,animation_end,star,"(-480.0, 270.0)",duration=1798ms
+8,training,1225.8926947,animation_start,t,"(480.0, 270.0)",sequence_position=4/4
+8,training,1227.7073189999937,animation_end,t,"(480.0, 270.0)",duration=1815ms
+8,training,1227.7243802000012,trial_end,all,,shapes_shown=circle-cross-star-t
+8,AG,1228.729244999995,videoStart,all,center,video=galaxies_5
+8,AG,1233.9131777000002,videoEnd,all,center,"video=galaxies_5, duration=5.15s"
+9,training,1235.4216319999978,trial_start,all,,shape_order=circle-cross-star-t
+9,training,1236.4380961999996,fixator_end,all,,
+9,training,1236.4565091999975,animation_start,circle,"(-480.0, -270.0)",sequence_position=1/4
+9,training,1238.270592700006,animation_end,circle,"(-480.0, -270.0)",duration=1814ms
+9,training,1238.2891374000028,animation_start,cross,"(480.0, -270.0)",sequence_position=2/4
+9,training,1240.0705684999994,animation_end,cross,"(480.0, -270.0)",duration=1781ms
+9,training,1240.0894555999985,animation_start,star,"(-480.0, 270.0)",sequence_position=3/4
+9,training,1241.8704616000032,animation_end,star,"(-480.0, 270.0)",duration=1781ms
+9,training,1241.8880695999978,animation_start,t,"(480.0, 270.0)",sequence_position=4/4
+9,training,1243.687012399998,animation_end,t,"(480.0, 270.0)",duration=1799ms
+9,training,1243.7037631999992,trial_end,all,,shapes_shown=circle-cross-star-t
+10,training,1244.7204456000036,trial_start,all,,shape_order=circle-cross-star-t
+10,training,1245.7354014000011,fixator_end,all,,
+10,training,1245.7536513999949,animation_start,circle,"(-480.0, -270.0)",sequence_position=1/4
+10,training,1247.5690183999977,animation_end,circle,"(-480.0, -270.0)",duration=1815ms
+10,training,1247.5867332000053,animation_start,cross,"(480.0, -270.0)",sequence_position=2/4
+10,training,1249.401806599999,animation_end,cross,"(480.0, -270.0)",duration=1815ms
+10,training,1249.4192865000077,animation_start,star,"(-480.0, 270.0)",sequence_position=3/4
+10,training,1251.2340321999945,animation_end,star,"(-480.0, 270.0)",duration=1815ms
+10,training,1251.2513648000022,animation_start,t,"(480.0, 270.0)",sequence_position=4/4
+10,training,1253.0507784000074,animation_end,t,"(480.0, 270.0)",duration=1799ms
+10,training,1253.0678230000049,trial_end,all,,shapes_shown=circle-cross-star-t
+11,training,1254.0714850000077,trial_start,all,,shape_order=circle-cross-star-t
+11,training,1255.081269400005,fixator_end,all,,
+11,training,1255.100463499999,animation_start,circle,"(-480.0, -270.0)",sequence_position=1/4
+11,training,1256.8976337000058,animation_end,circle,"(-480.0, -270.0)",duration=1797ms
+11,training,1256.9157422999997,animation_start,cross,"(480.0, -270.0)",sequence_position=2/4
+11,training,1258.7137967000017,animation_end,cross,"(480.0, -270.0)",duration=1798ms
+11,training,1258.7313009000063,animation_start,star,"(-480.0, 270.0)",sequence_position=3/4
+11,training,1260.529549800005,animation_end,star,"(-480.0, 270.0)",duration=1798ms
+11,training,1260.5494130000006,animation_start,t,"(480.0, 270.0)",sequence_position=4/4
+11,training,1262.345777399998,animation_end,t,"(480.0, 270.0)",duration=1796ms
+11,training,1262.3636903000006,trial_end,all,,shapes_shown=circle-cross-star-t
+12,training,1263.380707599994,trial_start,all,,shape_order=circle-cross-star-t
+12,training,1264.3957286000077,fixator_end,all,,
+12,training,1264.418099100003,animation_start,circle,"(-480.0, -270.0)",sequence_position=1/4
+12,training,1266.2112588000018,animation_end,circle,"(-480.0, -270.0)",duration=1793ms
+12,training,1266.2291874999937,animation_start,cross,"(480.0, -270.0)",sequence_position=2/4
+12,training,1268.0279007000063,animation_end,cross,"(480.0, -270.0)",duration=1799ms
+12,training,1268.0448281999998,animation_start,star,"(-480.0, 270.0)",sequence_position=3/4
+12,training,1269.8434215000016,animation_end,star,"(-480.0, 270.0)",duration=1799ms
+12,training,1269.8619935000024,animation_start,t,"(480.0, 270.0)",sequence_position=4/4
+12,training,1271.6761448000034,animation_end,t,"(480.0, 270.0)",duration=1814ms
+12,training,1271.693840699998,trial_end,all,,shapes_shown=circle-cross-star-t
+13,gaze_triggered,1273.7290109000023,trial_start,all,,shape_order=circle-cross-star-t
+13,gaze_triggered,1274.5960292999953,selection,star,"(-480.0, 270.0)","executed=True, fixation_duration=251ms, rt=863ms"
+13,gaze_triggered,1275.4446624999982,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=250ms, rt=1697ms"
+13,gaze_triggered,1275.4462592000054,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=1715ms"
+13,gaze_triggered,1275.4609741000022,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=1730ms"
+13,gaze_triggered,1275.4838302999997,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=1746ms"
+13,gaze_triggered,1275.4969094999979,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=1766ms"
+13,gaze_triggered,1275.5105857000017,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=1779ms"
+13,gaze_triggered,1275.5278136999987,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=1797ms"
+13,gaze_triggered,1275.5446020999952,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=1813ms"
+13,gaze_triggered,1275.561220100004,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=1830ms"
+13,gaze_triggered,1275.5763595000026,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=1845ms"
+13,gaze_triggered,1275.5942645000032,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=1863ms"
+13,gaze_triggered,1275.6103468999936,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=1879ms"
+13,gaze_triggered,1275.6279119999963,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=1897ms"
+13,gaze_triggered,1275.6436894000071,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=1913ms"
+13,gaze_triggered,1275.6610809999984,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=1930ms"
+13,gaze_triggered,1275.6769849999982,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=1946ms"
+13,gaze_triggered,1275.6940400000021,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=1963ms"
+13,gaze_triggered,1275.7099955000012,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=1979ms"
+13,gaze_triggered,1275.7275265000062,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=1996ms"
+13,gaze_triggered,1275.7441574999975,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=2013ms"
+13,gaze_triggered,1275.760937500003,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=2030ms"
+13,gaze_triggered,1275.7768111000041,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=2046ms"
+13,gaze_triggered,1275.7946041999967,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=2063ms"
+13,gaze_triggered,1275.810609799999,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=2079ms"
+13,gaze_triggered,1275.8274723000068,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=2096ms"
+13,gaze_triggered,1275.8434521000017,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=2112ms"
+13,gaze_triggered,1275.861205299996,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=2130ms"
+13,gaze_triggered,1275.8772188000003,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=2146ms"
+13,gaze_triggered,1275.8942438999948,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=2163ms"
+13,gaze_triggered,1275.910550600005,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=2179ms"
+13,gaze_triggered,1275.9275960999948,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=2196ms"
+13,gaze_triggered,1275.9441175999964,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=2213ms"
+13,gaze_triggered,1275.9609712999954,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=2230ms"
+13,gaze_triggered,1275.9773796999943,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=2246ms"
+13,gaze_triggered,1275.9943181999988,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=2263ms"
+13,gaze_triggered,1276.010737100005,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=2280ms"
+13,gaze_triggered,1276.0278050000052,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=2297ms"
+13,gaze_triggered,1276.044917399995,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=2314ms"
+13,gaze_triggered,1276.0609534999967,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=2330ms"
+13,gaze_triggered,1276.0778154,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=2347ms"
+13,gaze_triggered,1276.094079100003,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=2363ms"
+13,gaze_triggered,1276.110789600003,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=2379ms"
+13,gaze_triggered,1276.1280826000002,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=2397ms"
+13,gaze_triggered,1276.1439830000018,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=2413ms"
+13,gaze_triggered,1276.161057899997,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=2430ms"
+13,gaze_triggered,1276.1767518999986,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=2446ms"
+13,gaze_triggered,1276.194550900007,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=2463ms"
+13,gaze_triggered,1276.2097330999968,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=2478ms"
+13,gaze_triggered,1276.2266710999975,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=2495ms"
+13,gaze_triggered,1276.2429363999981,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=2511ms"
+13,gaze_triggered,1276.2610052999953,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=2530ms"
+13,gaze_triggered,1276.2767768000049,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=2546ms"
+13,gaze_triggered,1276.2951831999962,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=2564ms"
+13,gaze_triggered,1276.3104356999975,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=2579ms"
+13,gaze_triggered,1276.3273572000035,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=2596ms"
+13,gaze_triggered,1276.3434503000026,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=2612ms"
+13,gaze_triggered,1276.3607063999953,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=2630ms"
+13,gaze_triggered,1276.3770646000048,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=2646ms"
+13,gaze_triggered,1277.9941280000057,selection,cross,"(480.0, -270.0)","executed=True, fixation_duration=266ms, rt=4262ms"
+13,gaze_triggered,1278.809637600003,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=250ms, rt=5063ms"
+13,gaze_triggered,1278.8112416000076,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=5080ms"
+13,gaze_triggered,1278.8264350999962,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=5095ms"
+13,gaze_triggered,1278.8425790000038,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=5111ms"
+13,gaze_triggered,1278.8598303000035,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=5128ms"
+13,gaze_triggered,1278.8763745000033,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=5145ms"
+13,gaze_triggered,1278.8933011000045,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=5162ms"
+13,gaze_triggered,1278.909295999998,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=5178ms"
+13,gaze_triggered,1278.9265998000046,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=5195ms"
+13,gaze_triggered,1278.943817499996,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=5213ms"
+13,gaze_triggered,1278.959737600002,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=5228ms"
+13,gaze_triggered,1278.9761043000035,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=5245ms"
+13,gaze_triggered,1278.994049800007,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=5263ms"
+13,gaze_triggered,1279.0099611000041,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=5279ms"
+13,gaze_triggered,1279.027085900001,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=5296ms"
+13,gaze_triggered,1279.0428272999998,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=5312ms"
+13,gaze_triggered,1279.0636721000046,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=5332ms"
+13,gaze_triggered,1279.076621900007,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=5345ms"
+13,gaze_triggered,1279.0931164000067,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=5362ms"
+13,gaze_triggered,1279.1090205999935,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=5378ms"
+13,gaze_triggered,1279.126550800007,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=5395ms"
+13,gaze_triggered,1279.1429823999933,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=5412ms"
+13,gaze_triggered,1279.159530799996,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=5428ms"
+13,gaze_triggered,1279.1762721999985,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=5445ms"
+13,gaze_triggered,1279.1934516000038,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=5462ms"
+13,gaze_triggered,1279.209728300004,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=5478ms"
+13,gaze_triggered,1279.2265119999938,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=5495ms"
+13,gaze_triggered,1279.243931799996,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=5513ms"
+13,gaze_triggered,1279.2614936000027,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=5530ms"
+13,gaze_triggered,1279.2765537999949,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=5545ms"
+13,gaze_triggered,1279.2940562000003,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=5563ms"
+13,gaze_triggered,1279.309448800006,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=5578ms"
+13,gaze_triggered,1279.3265914000076,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=5595ms"
+13,gaze_triggered,1279.3430225000047,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=5612ms"
+13,gaze_triggered,1279.359779899998,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=5628ms"
+13,gaze_triggered,1279.3758196999988,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=5645ms"
+13,gaze_triggered,1279.393051799998,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=5662ms"
+13,gaze_triggered,1279.4091989000008,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=5678ms"
+13,gaze_triggered,1279.4263822000066,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=5695ms"
+13,gaze_triggered,1279.4424969999964,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=5711ms"
+13,gaze_triggered,1279.4595573999977,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=5728ms"
+13,gaze_triggered,1279.4763056999946,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=5745ms"
+13,gaze_triggered,1279.493296200002,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=5762ms"
+13,gaze_triggered,1279.511992300002,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=5781ms"
+13,gaze_triggered,1279.5264241999976,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=5795ms"
+13,gaze_triggered,1279.5436008999968,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=5812ms"
+13,gaze_triggered,1279.5598476000014,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=5828ms"
+13,gaze_triggered,1279.5763785000017,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=5845ms"
+13,gaze_triggered,1279.5934106000059,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=5862ms"
+13,gaze_triggered,1279.6091271000041,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=5878ms"
+13,gaze_triggered,1279.6262563000055,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=5895ms"
+13,gaze_triggered,1279.6420637999981,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=5911ms"
+13,gaze_triggered,1279.6602184000076,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=5929ms"
+13,gaze_triggered,1279.675843200006,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=5945ms"
+13,gaze_triggered,1279.6934299999994,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=5962ms"
+13,gaze_triggered,1279.709110900003,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=5978ms"
+13,gaze_triggered,1279.7263220000023,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=5995ms"
+13,gaze_triggered,1279.742866200002,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=6011ms"
+13,gaze_triggered,1279.7595407000044,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=6028ms"
+13,gaze_triggered,1279.7762934000057,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=6045ms"
+13,gaze_triggered,1283.1261412000022,selection,star,"(-480.0, 270.0)","executed=True, fixation_duration=250ms, rt=9394ms"
+13,gaze_triggered,1287.3910102999944,selection,circle,"(-480.0, -270.0)","executed=True, fixation_duration=265ms, rt=13659ms"
+13,gaze_triggered,1289.205902200003,trial_end,all,,"selections=4, shapes=star,cross,star,circle, positions=(-480.0, 270.0),(480.0, -270.0),(-480.0, 270.0),(-480.0, -270.0), timings=863,3398,5132,4264"
+14,gaze_triggered,1291.2423340999958,trial_start,all,,shape_order=circle-cross-star-t
+14,gaze_triggered,1292.9065988999937,selection,circle,"(-480.0, -270.0)","executed=True, fixation_duration=250ms, rt=1660ms"
+14,gaze_triggered,1293.1898929000017,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=262ms, rt=1927ms"
+14,gaze_triggered,1293.1924502000038,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=1948ms"
+14,gaze_triggered,1293.2052468000038,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=1960ms"
+14,gaze_triggered,1293.2220105000015,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=1977ms"
+14,gaze_triggered,1293.2378448999953,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=1993ms"
+14,gaze_triggered,1293.2559086999972,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2011ms"
+14,gaze_triggered,1293.271221899995,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2026ms"
+14,gaze_triggered,1293.2887787999935,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2044ms"
+14,gaze_triggered,1293.3040421000042,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2059ms"
+14,gaze_triggered,1293.3221156000072,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2077ms"
+14,gaze_triggered,1293.3378792000003,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2093ms"
+14,gaze_triggered,1293.3554098000022,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2111ms"
+14,gaze_triggered,1293.3711577000067,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2126ms"
+14,gaze_triggered,1293.3888331000053,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2144ms"
+14,gaze_triggered,1293.4043916999944,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2160ms"
+14,gaze_triggered,1293.4215952999948,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2177ms"
+14,gaze_triggered,1293.4375640999933,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2193ms"
+14,gaze_triggered,1293.4549711,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2210ms"
+14,gaze_triggered,1293.4710036000033,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2226ms"
+14,gaze_triggered,1293.4884171000012,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2243ms"
+14,gaze_triggered,1293.5045434000058,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2260ms"
+14,gaze_triggered,1293.5218581999943,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2277ms"
+14,gaze_triggered,1293.5379522000003,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2293ms"
+14,gaze_triggered,1293.5554575999995,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2311ms"
+14,gaze_triggered,1293.571687100004,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2327ms"
+14,gaze_triggered,1293.5885527000064,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2344ms"
+14,gaze_triggered,1293.6046513000038,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2360ms"
+14,gaze_triggered,1293.6219183000067,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2377ms"
+14,gaze_triggered,1293.637738599995,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2393ms"
+14,gaze_triggered,1293.6549188000063,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2410ms"
+14,gaze_triggered,1293.671259900002,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2426ms"
+14,gaze_triggered,1293.6880705999938,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2443ms"
+14,gaze_triggered,1293.7042115999939,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2459ms"
+14,gaze_triggered,1293.721786299997,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2477ms"
+14,gaze_triggered,1293.737537699999,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2492ms"
+14,gaze_triggered,1293.755705699994,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2510ms"
+14,gaze_triggered,1293.777499200005,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2526ms"
+14,gaze_triggered,1293.7913356000063,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2547ms"
+14,gaze_triggered,1293.8054580000025,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2561ms"
+14,gaze_triggered,1293.821811300004,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2577ms"
+14,gaze_triggered,1293.8379981000035,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2593ms"
+14,gaze_triggered,1293.8552010999992,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2610ms"
+14,gaze_triggered,1293.8711044999945,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2626ms"
+14,gaze_triggered,1293.8880759000021,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2643ms"
+14,gaze_triggered,1293.9046393000026,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2660ms"
+14,gaze_triggered,1293.9221035999944,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2677ms"
+14,gaze_triggered,1293.9369118000031,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2692ms"
+14,gaze_triggered,1293.9549289999995,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2710ms"
+14,gaze_triggered,1293.9716303000023,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2727ms"
+14,gaze_triggered,1293.9884351000073,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2743ms"
+14,gaze_triggered,1294.0031681999972,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2758ms"
+14,gaze_triggered,1294.021846699994,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2777ms"
+14,gaze_triggered,1294.0376322999946,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2792ms"
+14,gaze_triggered,1294.0549611000024,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2810ms"
+14,gaze_triggered,1294.071079500005,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2826ms"
+14,gaze_triggered,1294.0884747999953,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2844ms"
+14,gaze_triggered,1294.104298899998,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2859ms"
+14,gaze_triggered,1294.121742400006,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2877ms"
+14,gaze_triggered,1294.137568799997,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2893ms"
+14,gaze_triggered,1294.1551898000034,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2910ms"
+14,gaze_triggered,1294.1707907999953,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2926ms"
+14,gaze_triggered,1294.1880409000005,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2943ms"
+14,gaze_triggered,1294.203882700007,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2959ms"
+14,gaze_triggered,1294.221515600002,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2977ms"
+14,gaze_triggered,1294.237175999995,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2992ms"
+14,gaze_triggered,1294.2546610999998,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=3010ms"
+14,gaze_triggered,1294.2694532000023,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=3025ms"
+14,gaze_triggered,1294.2888933000067,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=3044ms"
+14,gaze_triggered,1294.3035093000071,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=3059ms"
+14,gaze_triggered,1294.321217699995,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=3076ms"
+14,gaze_triggered,1294.3375987000036,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=3092ms"
+14,gaze_triggered,1294.3546398000035,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=3110ms"
+14,gaze_triggered,1294.3697422999976,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=3125ms"
+14,gaze_triggered,1294.3882295000076,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=3143ms"
+14,gaze_triggered,1294.403107399994,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=3158ms"
+14,gaze_triggered,1294.4217279000004,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=3177ms"
+14,gaze_triggered,1294.436500900003,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=3192ms"
+14,gaze_triggered,1294.4546989999944,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=3209ms"
+14,gaze_triggered,1294.4693709999992,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=3225ms"
+14,gaze_triggered,1294.488208099996,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=3243ms"
+14,gaze_triggered,1294.5038268000062,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=3259ms"
+14,gaze_triggered,1294.5217174999998,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=3277ms"
+14,gaze_triggered,1294.5375824000075,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=3293ms"
+14,gaze_triggered,1294.5546629000019,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=3310ms"
+14,gaze_triggered,1294.570587299997,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=3326ms"
+14,gaze_triggered,1294.588105600007,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=3343ms"
+14,gaze_triggered,1294.6015563999972,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=3357ms"
+14,gaze_triggered,1294.6217385000054,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=3377ms"
+14,gaze_triggered,1294.6364893999998,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=3392ms"
+14,gaze_triggered,1294.654396900005,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=3410ms"
+14,gaze_triggered,1294.6698754999961,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=3425ms"
+14,gaze_triggered,1294.6868938999978,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=3442ms"
+14,gaze_triggered,1297.9849594999978,selection,star,"(-480.0, 270.0)","executed=True, fixation_duration=250ms, rt=6739ms"
+14,gaze_triggered,1298.270235899996,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=265ms, rt=7008ms"
+14,gaze_triggered,1298.2729506000032,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=7028ms"
+14,gaze_triggered,1298.2857607000042,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=7041ms"
+14,gaze_triggered,1298.302965099996,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=7058ms"
+14,gaze_triggered,1298.318315299999,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=7074ms"
+14,gaze_triggered,1298.3358929999958,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=7091ms"
+14,gaze_triggered,1298.351933900005,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=7107ms"
+14,gaze_triggered,1298.3693987000006,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=7125ms"
+14,gaze_triggered,1298.3850691999978,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=7141ms"
+14,gaze_triggered,1298.4028308999987,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=7158ms"
+14,gaze_triggered,1298.4185188999982,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=7174ms"
+14,gaze_triggered,1298.433569300003,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=7189ms"
+14,gaze_triggered,1298.452588500004,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=7208ms"
+14,gaze_triggered,1298.4685294999945,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=7224ms"
+14,gaze_triggered,1298.4858978999982,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=7241ms"
+14,gaze_triggered,1298.5014870000014,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=7257ms"
+14,gaze_triggered,1298.519034900004,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=7274ms"
+14,gaze_triggered,1298.535066700002,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=7291ms"
+14,gaze_triggered,1298.5527216000046,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=7308ms"
+14,gaze_triggered,1298.5685667999933,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=7324ms"
+14,gaze_triggered,1298.585789699995,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=7341ms"
+14,gaze_triggered,1298.6019876000064,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=7358ms"
+14,gaze_triggered,1298.6194277000031,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=7375ms"
+14,gaze_triggered,1298.6339252000034,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=7390ms"
+14,gaze_triggered,1298.6525205999933,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=7408ms"
+14,gaze_triggered,1298.6684874000057,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=7424ms"
+14,gaze_triggered,1298.6860566999967,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=7441ms"
+14,gaze_triggered,1298.7023976000055,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=7458ms"
+14,gaze_triggered,1298.7191597000055,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=7475ms"
+14,gaze_triggered,1298.7353245999984,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=7491ms"
+14,gaze_triggered,1298.7527608999953,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=7508ms"
+14,gaze_triggered,1298.7686106000037,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=7524ms"
+14,gaze_triggered,1298.7863263000036,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=7542ms"
+14,gaze_triggered,1298.8020827,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=7558ms"
+14,gaze_triggered,1298.8193354999967,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=7575ms"
+14,gaze_triggered,1298.835097999996,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=7591ms"
+14,gaze_triggered,1298.8527579999936,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=7608ms"
+14,gaze_triggered,1298.8685671999992,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=7624ms"
+14,gaze_triggered,1298.8861566999985,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=7642ms"
+14,gaze_triggered,1298.9021795000008,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=7658ms"
+14,gaze_triggered,1298.9191282999964,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=7674ms"
+14,gaze_triggered,1298.935792999997,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=7691ms"
+14,gaze_triggered,1298.952583899998,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=7708ms"
+14,gaze_triggered,1298.968320400003,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=7724ms"
+14,gaze_triggered,1298.9858154999965,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=7741ms"
+14,gaze_triggered,1299.0018223999941,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=7757ms"
+14,gaze_triggered,1299.0197005999944,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=7775ms"
+14,gaze_triggered,1299.0358316000056,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=7791ms"
+14,gaze_triggered,1299.0524334999936,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=7808ms"
+14,gaze_triggered,1299.0681440000044,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=7824ms"
+14,gaze_triggered,1299.0859093000036,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=7841ms"
+14,gaze_triggered,1299.1020643999946,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=7857ms"
+14,gaze_triggered,1299.1189748000033,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=7874ms"
+14,gaze_triggered,1299.1347281000053,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=7890ms"
+14,gaze_triggered,1299.152432899995,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=7908ms"
+14,gaze_triggered,1299.168291599999,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=7924ms"
+14,gaze_triggered,1299.1857842000027,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=7941ms"
+14,gaze_triggered,1299.2015526000032,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=7957ms"
+14,gaze_triggered,1299.2188528999977,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=7974ms"
+14,gaze_triggered,1299.2345901999943,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=7990ms"
+14,gaze_triggered,1299.2508060999971,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=8004ms"
+14,gaze_triggered,1299.2685824000073,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=8024ms"
+14,gaze_triggered,1299.2860293999984,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=8041ms"
+14,gaze_triggered,1299.3020015999937,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=8057ms"
+14,gaze_triggered,1299.319285999998,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=8075ms"
+14,gaze_triggered,1299.335056099997,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=8091ms"
+14,gaze_triggered,1299.3521760000003,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=8108ms"
+14,gaze_triggered,1299.3684311999968,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=8124ms"
+14,gaze_triggered,1299.385506999999,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=8141ms"
+14,gaze_triggered,1299.4014029999962,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=8157ms"
+14,gaze_triggered,1299.4195423000056,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=8175ms"
+14,gaze_triggered,1299.4347959000006,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=8190ms"
+14,gaze_triggered,1299.4523304000031,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=8208ms"
+14,gaze_triggered,1299.4681706999982,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=8224ms"
+14,gaze_triggered,1299.4856287000002,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=8241ms"
+14,gaze_triggered,1299.5011508000025,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=8257ms"
+14,gaze_triggered,1299.5187396999972,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=8274ms"
+14,gaze_triggered,1299.534808299999,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=8290ms"
+14,gaze_triggered,1299.5520114999963,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=8307ms"
+14,gaze_triggered,1299.568336299999,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=8324ms"
+14,gaze_triggered,1299.5856965999992,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=8341ms"
+14,gaze_triggered,1299.6023914999969,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=8358ms"
+14,gaze_triggered,1299.6190574000066,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=8374ms"
+14,gaze_triggered,1299.6347079999978,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=8390ms"
+14,gaze_triggered,1299.6524652999942,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=8408ms"
+14,gaze_triggered,1299.6680457000039,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=8424ms"
+14,gaze_triggered,1299.6856314000033,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=8441ms"
+14,gaze_triggered,1299.701744799997,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=8457ms"
+14,gaze_triggered,1299.7189039000077,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=8474ms"
+14,gaze_triggered,1299.7343397000077,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=8490ms"
+14,gaze_triggered,1299.7518782999978,queued_selection,star,"(-480.0, 270.0)","executed=False, fixation_duration=0ms, rt=8507ms"
+14,gaze_triggered,1300.7194173000025,selection,circle,"(-480.0, -270.0)","executed=True, fixation_duration=266ms, rt=9474ms"
+14,gaze_triggered,1305.3511829000054,selection,cross,"(480.0, -270.0)","executed=True, fixation_duration=251ms, rt=14106ms"
+14,gaze_triggered,1307.1831640000019,trial_end,all,,"selections=4, shapes=circle,star,circle,cross, positions=(-480.0, -270.0),(-480.0, 270.0),(-480.0, -270.0),(480.0, -270.0), timings=1660,5079,2734,4632"
+15,gaze_triggered,1309.235374900003,trial_start,all,,shape_order=circle-cross-star-t
+15,gaze_triggered,1310.7506431000074,selection,cross,"(480.0, -270.0)","executed=True, fixation_duration=250ms, rt=1512ms"
+15,gaze_triggered,1311.5668683999975,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=266ms, rt=2312ms"
+15,gaze_triggered,1311.5686298000073,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2331ms"
+15,gaze_triggered,1311.5824595000013,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2345ms"
+15,gaze_triggered,1311.5980203999934,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2360ms"
+15,gaze_triggered,1311.6186999000056,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2381ms"
+15,gaze_triggered,1311.6325054000044,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2395ms"
+15,gaze_triggered,1311.6487064999965,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2411ms"
+15,gaze_triggered,1311.6654797999945,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2428ms"
+15,gaze_triggered,1311.682669899994,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2445ms"
+15,gaze_triggered,1311.698544800005,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2461ms"
+15,gaze_triggered,1311.7153549000068,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2478ms"
+15,gaze_triggered,1311.731497700006,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2494ms"
+15,gaze_triggered,1311.7485460000025,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2511ms"
+15,gaze_triggered,1311.7641908000078,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2527ms"
+15,gaze_triggered,1311.7819741999992,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2544ms"
+15,gaze_triggered,1311.7977870000032,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2560ms"
+15,gaze_triggered,1311.815189300003,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2578ms"
+15,gaze_triggered,1311.831345700004,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2594ms"
+15,gaze_triggered,1311.8487064999936,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2611ms"
+15,gaze_triggered,1311.8645148000069,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2627ms"
+15,gaze_triggered,1311.8831515000056,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2645ms"
+15,gaze_triggered,1311.8979509000055,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2660ms"
+15,gaze_triggered,1311.9156288999948,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2678ms"
+15,gaze_triggered,1311.932043599998,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2694ms"
+15,gaze_triggered,1311.9491463000013,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2711ms"
+15,gaze_triggered,1311.9648358999984,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2727ms"
+15,gaze_triggered,1311.982009200001,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2744ms"
+15,gaze_triggered,1311.9978058999986,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2760ms"
+15,gaze_triggered,1312.0152441999962,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2778ms"
+15,gaze_triggered,1312.031237400006,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2794ms"
+15,gaze_triggered,1312.0486399000074,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2811ms"
+15,gaze_triggered,1312.0647372999956,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2827ms"
+15,gaze_triggered,1312.0824985000072,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2845ms"
+15,gaze_triggered,1312.0977245999966,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2860ms"
+15,gaze_triggered,1312.1152918000007,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2878ms"
+15,gaze_triggered,1312.1314237000042,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2894ms"
+15,gaze_triggered,1312.1485285999952,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2911ms"
+15,gaze_triggered,1312.1644681000034,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2927ms"
+15,gaze_triggered,1312.1819457999954,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2944ms"
+15,gaze_triggered,1312.1977563999972,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2960ms"
+15,gaze_triggered,1312.2153361999954,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2978ms"
+15,gaze_triggered,1312.231465200006,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2994ms"
+15,gaze_triggered,1312.2482550999994,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=3011ms"
+15,gaze_triggered,1312.2644565999944,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=3027ms"
+15,gaze_triggered,1312.2823452000011,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=3045ms"
+15,gaze_triggered,1312.2969183999958,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=3059ms"
+15,gaze_triggered,1312.3191012000025,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=3081ms"
+15,gaze_triggered,1312.3346466999938,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=3097ms"
+15,gaze_triggered,1312.3622561999946,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=3120ms"
+15,gaze_triggered,1312.3833546999958,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=3140ms"
+15,gaze_triggered,1312.4045966999984,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=3166ms"
+15,gaze_triggered,1312.4327243000007,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=3186ms"
+15,gaze_triggered,1312.448368700003,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=3205ms"
+15,gaze_triggered,1312.4698198999977,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=3231ms"
+15,gaze_triggered,1312.490149300007,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=3252ms"
+15,gaze_triggered,1312.5126670000027,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=3267ms"
+15,gaze_triggered,1317.7640181000024,trial_end,all,,"selections=1, shapes=cross, positions=(480.0, -270.0), timings=1512"
+16,gaze_triggered,1319.8135662999994,trial_start,all,,shape_order=circle-cross-star-t
+16,AG,1325.843237299996,videoStart,all,center,video=kangaroo_5
+16,AG,1331.0433193000063,videoEnd,all,center,"video=kangaroo_5, duration=5.18s"
+17,gaze_triggered,1333.5731305999943,trial_start,all,,shape_order=circle-cross-star-t
+17,gaze_triggered,1334.1250713000045,selection,cross,"(480.0, -270.0)","executed=True, fixation_duration=266ms, rt=549ms"
+17,gaze_triggered,1334.580906999996,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=250ms, rt=982ms"
+17,gaze_triggered,1334.584405600006,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=1009ms"
+17,gaze_triggered,1334.5949171999964,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=1019ms"
+17,gaze_triggered,1334.623038100006,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=1048ms"
+17,gaze_triggered,1334.640095900002,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=1065ms"
+17,gaze_triggered,1334.657732199994,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=1082ms"
+17,gaze_triggered,1334.6734122000053,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=1098ms"
+17,gaze_triggered,1334.6909483000054,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=1116ms"
+17,gaze_triggered,1334.7065855999972,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=1131ms"
+17,gaze_triggered,1334.7243288000027,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=1149ms"
+17,gaze_triggered,1334.7408059000009,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=1166ms"
+17,gaze_triggered,1334.7578787999955,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=1183ms"
+17,gaze_triggered,1334.7734569000022,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=1198ms"
+17,gaze_triggered,1334.7906518999953,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=1215ms"
+17,gaze_triggered,1334.8067908999947,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=1231ms"
+17,gaze_triggered,1334.8240471000026,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=1249ms"
+17,gaze_triggered,1334.8399177999963,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=1264ms"
+17,gaze_triggered,1334.8575430000055,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=1282ms"
+17,gaze_triggered,1334.8734369000013,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=1298ms"
+17,gaze_triggered,1334.8902928000025,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=1315ms"
+17,gaze_triggered,1334.9065736000048,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=1331ms"
+17,gaze_triggered,1334.924286399997,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=1349ms"
+17,gaze_triggered,1334.9402673000004,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=1365ms"
+17,gaze_triggered,1334.9577783999994,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=1383ms"
+17,gaze_triggered,1334.9734145999973,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=1398ms"
+17,gaze_triggered,1334.9907382999954,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=1415ms"
+17,gaze_triggered,1335.0067300999945,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=1431ms"
+17,gaze_triggered,1335.0245049000077,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=1449ms"
+17,gaze_triggered,1335.039845899999,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=1464ms"
+17,gaze_triggered,1335.0571306000056,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=1482ms"
+17,gaze_triggered,1335.0732660000067,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=1498ms"
+17,gaze_triggered,1335.0907471999963,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=1515ms"
+17,gaze_triggered,1335.1065776000032,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=1531ms"
+17,gaze_triggered,1335.1244206999982,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=1549ms"
+17,gaze_triggered,1335.1408410000004,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=266ms, rt=1551ms"
+17,gaze_triggered,1335.142982999998,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=1568ms"
+17,gaze_triggered,1335.1574771000014,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=1582ms"
+17,gaze_triggered,1335.1732103999966,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=1598ms"
+17,gaze_triggered,1335.190408800001,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=1615ms"
+17,gaze_triggered,1335.2065644999966,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=1631ms"
+17,gaze_triggered,1335.224249299994,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=1649ms"
+17,gaze_triggered,1335.240114900007,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=1665ms"
+17,gaze_triggered,1335.2573361999966,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=1682ms"
+17,gaze_triggered,1335.2735669999965,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=1698ms"
+17,gaze_triggered,1335.2912791999988,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=1716ms"
+17,gaze_triggered,1335.3064269000024,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=1731ms"
+17,gaze_triggered,1335.3239968999987,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=1749ms"
+17,gaze_triggered,1335.3398551999999,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=1764ms"
+17,gaze_triggered,1335.3575413000071,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=1782ms"
+17,gaze_triggered,1335.3732372999948,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=1798ms"
+17,gaze_triggered,1335.3908954999933,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=1816ms"
+17,gaze_triggered,1335.4064646000043,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=1831ms"
+17,gaze_triggered,1335.4238276999968,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=1849ms"
+17,gaze_triggered,1335.439928199994,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=1864ms"
+17,gaze_triggered,1335.4572966999986,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=1882ms"
+17,gaze_triggered,1335.4730907000048,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=1898ms"
+17,gaze_triggered,1335.4914469000068,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=1916ms"
+17,gaze_triggered,1335.5073362999974,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=1932ms"
+17,gaze_triggered,1335.5240304000035,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=1949ms"
+17,gaze_triggered,1335.5402215000067,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=1965ms"
+17,gaze_triggered,1335.5575928000035,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=1982ms"
+17,gaze_triggered,1335.5737268999947,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=1998ms"
+17,gaze_triggered,1335.5904562000069,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2015ms"
+17,gaze_triggered,1335.606608400005,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2031ms"
+17,gaze_triggered,1335.623986000006,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2049ms"
+17,gaze_triggered,1335.6398842000053,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2064ms"
+17,gaze_triggered,1335.657409499996,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2082ms"
+17,gaze_triggered,1335.6732945999975,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2098ms"
+17,gaze_triggered,1335.6908396999934,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2116ms"
+17,gaze_triggered,1335.7066068999993,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2131ms"
+17,gaze_triggered,1335.7240770000062,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2149ms"
+17,gaze_triggered,1335.7398689999973,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2164ms"
+17,gaze_triggered,1335.757668499995,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2182ms"
+17,gaze_triggered,1335.7730422000022,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2198ms"
+17,gaze_triggered,1335.7909714999987,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2216ms"
+17,gaze_triggered,1335.8065012000006,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2231ms"
+17,gaze_triggered,1335.8235833999934,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2248ms"
+17,gaze_triggered,1335.8393858000054,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2264ms"
+17,gaze_triggered,1335.8571639000002,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2282ms"
+17,gaze_triggered,1335.8731742999953,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2298ms"
+17,gaze_triggered,1335.8904295999964,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2315ms"
+17,gaze_triggered,1335.9064937999938,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2331ms"
+17,gaze_triggered,1335.923934999999,queued_selection,cross,"(480.0, -270.0)","executed=False, fixation_duration=0ms, rt=2349ms"
+17,gaze_triggered,1336.9569510000001,selection,circle,"(-480.0, -270.0)","executed=True, fixation_duration=250ms, rt=3381ms"
+17,gaze_triggered,1337.2400151000038,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=264ms, rt=3648ms"
+17,gaze_triggered,1337.2419616999978,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=3667ms"
+17,gaze_triggered,1337.2570242000074,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=3682ms"
+17,gaze_triggered,1337.2727491999976,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=3697ms"
+17,gaze_triggered,1337.2905155000044,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=3715ms"
+17,gaze_triggered,1337.3062400000053,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=3731ms"
+17,gaze_triggered,1337.3236330999935,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=3748ms"
+17,gaze_triggered,1337.3393151000055,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=3764ms"
+17,gaze_triggered,1337.3567913000006,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=3781ms"
+17,gaze_triggered,1337.3730806999956,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=3798ms"
+17,gaze_triggered,1337.390137800001,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=3815ms"
+17,gaze_triggered,1337.4054314999958,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=3830ms"
+17,gaze_triggered,1337.423852299995,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=3848ms"
+17,gaze_triggered,1337.439552900003,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=3864ms"
+17,gaze_triggered,1337.4565709000017,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=3881ms"
+17,gaze_triggered,1337.4725991000014,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=3897ms"
+17,gaze_triggered,1337.4899408000056,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=3914ms"
+17,gaze_triggered,1337.505835200005,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=3931ms"
+17,gaze_triggered,1337.5232893000066,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=3948ms"
+17,gaze_triggered,1337.539648799997,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=3964ms"
+17,gaze_triggered,1337.5566207999946,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=3981ms"
+17,gaze_triggered,1337.5731774000014,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=3998ms"
+17,gaze_triggered,1337.5900174999988,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=4015ms"
+17,gaze_triggered,1337.6058690000064,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=4031ms"
+17,gaze_triggered,1337.6234132999962,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=4048ms"
+17,gaze_triggered,1337.6388817999978,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=4063ms"
+17,gaze_triggered,1337.6568257000035,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=4081ms"
+17,gaze_triggered,1337.6723328999942,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=4097ms"
+17,gaze_triggered,1337.6897966999968,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=4114ms"
+17,gaze_triggered,1337.7057389999973,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=4130ms"
+17,gaze_triggered,1337.7232168000046,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=4148ms"
+17,gaze_triggered,1337.7398628999945,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=4164ms"
+17,gaze_triggered,1337.7565394999983,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=4181ms"
+17,gaze_triggered,1337.7734977999935,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=4198ms"
+17,gaze_triggered,1337.7901948999934,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=4215ms"
+17,gaze_triggered,1337.8062830999988,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=4231ms"
+17,gaze_triggered,1337.8236732000078,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=4248ms"
+17,gaze_triggered,1337.8386043000064,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=4263ms"
+17,gaze_triggered,1337.8565133999946,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=4281ms"
+17,gaze_triggered,1337.8723557000048,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=4297ms"
+17,gaze_triggered,1337.889834600006,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=4314ms"
+17,gaze_triggered,1337.906199200006,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=4331ms"
+17,gaze_triggered,1337.923588699996,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=4348ms"
+17,gaze_triggered,1337.9388817,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=4364ms"
+17,gaze_triggered,1337.9570158999995,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=4382ms"
+17,gaze_triggered,1337.9728088999982,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=4397ms"
+17,gaze_triggered,1337.9902097000013,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=4415ms"
+17,gaze_triggered,1338.0056199999963,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=4430ms"
+17,gaze_triggered,1338.0232460999978,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=4448ms"
+17,gaze_triggered,1338.0390004000074,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=4464ms"
+17,gaze_triggered,1338.0569497999968,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=4482ms"
+17,gaze_triggered,1338.0720524000062,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=4497ms"
+17,gaze_triggered,1338.089835100007,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=4514ms"
+17,gaze_triggered,1338.105459600003,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=4530ms"
+17,gaze_triggered,1338.1232214000047,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=4548ms"
+17,gaze_triggered,1338.1390737000038,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=4564ms"
+17,gaze_triggered,1338.1569624999975,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=4581ms"
+17,gaze_triggered,1338.1720564999996,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=4597ms"
+17,gaze_triggered,1338.189672499997,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=4614ms"
+17,gaze_triggered,1338.206463399998,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=4631ms"
+17,gaze_triggered,1338.2259677999973,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=4651ms"
+17,gaze_triggered,1338.2400305000047,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=4665ms"
+17,gaze_triggered,1338.2566556999955,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=4681ms"
+17,gaze_triggered,1338.2721531999996,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=4697ms"
+17,gaze_triggered,1338.2899391999963,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=4714ms"
+17,gaze_triggered,1338.3056847999978,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=4730ms"
+17,gaze_triggered,1338.3238790000032,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=4748ms"
+17,gaze_triggered,1338.3393180999992,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=4764ms"
+17,gaze_triggered,1338.3571796000033,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=4782ms"
+17,gaze_triggered,1338.3721109000035,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=4797ms"
+17,gaze_triggered,1338.3896647000074,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=4814ms"
+17,gaze_triggered,1338.4055815000029,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=4830ms"
+17,gaze_triggered,1338.4229014000011,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=4847ms"
+17,gaze_triggered,1338.4391115000035,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=4864ms"
+17,gaze_triggered,1338.456451399994,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=4881ms"
+17,gaze_triggered,1338.472190600005,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=4897ms"
+17,gaze_triggered,1338.4900806000078,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=4915ms"
+17,gaze_triggered,1338.506122699997,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=4931ms"
+17,gaze_triggered,1338.5232457999955,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=4948ms"
+17,gaze_triggered,1338.538466099999,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=4963ms"
+17,gaze_triggered,1338.5568635999953,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=4981ms"
+17,gaze_triggered,1338.5720536000008,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=4997ms"
+17,gaze_triggered,1338.5896689999936,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=5014ms"
+17,gaze_triggered,1338.6056188999937,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=5030ms"
+17,gaze_triggered,1338.624209600006,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=5049ms"
+17,gaze_triggered,1338.639553999994,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=5064ms"
+17,gaze_triggered,1338.6562234000012,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=5081ms"
+17,gaze_triggered,1338.6729211000056,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=5098ms"
+17,gaze_triggered,1338.689998899994,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=5115ms"
+17,gaze_triggered,1338.7058919999981,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=5131ms"
+17,gaze_triggered,1338.7237376999983,queued_selection,circle,"(-480.0, -270.0)","executed=False, fixation_duration=0ms, rt=5148ms"
+17,gaze_triggered,1341.6562077999988,selection,cross,"(480.0, -270.0)","executed=True, fixation_duration=266ms, rt=8080ms"
+17,gaze_triggered,1347.0552099000051,selection,star,"(-480.0, 270.0)","executed=True, fixation_duration=266ms, rt=13479ms"
+17,gaze_triggered,1348.8876465000067,trial_end,all,,"selections=4, shapes=cross,circle,cross,star, positions=(480.0, -270.0),(-480.0, -270.0),(480.0, -270.0),(-480.0, 270.0), timings=549,2831,4698,5399"
