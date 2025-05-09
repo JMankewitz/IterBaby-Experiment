@@ -401,6 +401,7 @@ class InfantEyetrackingExperiment:
         # --- Phase 2: Animate each shape ---
         # Sequentially animate each shape in order.
         for shape_index, shape in enumerate(self.shape_order):
+            libtime.pause(random.choice([0, 250, 500, 750, 1000]))
             self.logger.info(f"Animating shape: {shape}")
             animation_start_time = self.data_logger.log_trial_event(
                 trial_num=self.current_trial,

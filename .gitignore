@@ -2,6 +2,8 @@
 data/delete/*
 data/*/delete/
 eyetrackingData/delete/*
+.idea/
+*.pickle
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
