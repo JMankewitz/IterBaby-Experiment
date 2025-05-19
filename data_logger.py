@@ -32,18 +32,14 @@ class DataLogger:
         training_dir = os.path.join(data_dir, "training")
         selections_dir = os.path.join(data_dir, "selections")
         sequence_dir = os.path.join(data_dir, "sequences")
-        active_test_dir = os.path.join(data_dir, "activeTest")
 
         # Create directories if they don't exist
-        for directory in [data_dir, training_dir, selections_dir, sequence_dir, active_test_dir]:
+        for directory in [data_dir, training_dir, selections_dir, sequence_dir]:
             os.makedirs(directory, exist_ok=True)
 
         # 1. Initialize legacy files for backward compatibility
         training_filepath = os.path.join(training_dir, f"tracking_data_{self.subjVariables['subjCode']}.txt")
         self.trainingOutputFile = open(training_filepath, 'w')
-
-        self.results_filepath = os.path.join(active_test_dir, f"tracking_data_{self.subjVariables['subjCode']}.txt")
-        # self.results_file = open(self.results_filepath, 'w')  # Uncomment if needed
 
         # 2. Training data log - contains trial information and timestamps
         self.training_log_path = os.path.join(training_dir, f"training_log_{self.subjVariables['subjCode']}.csv")
