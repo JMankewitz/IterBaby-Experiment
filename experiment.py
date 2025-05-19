@@ -700,6 +700,257 @@ class InfantEyetrackingExperiment:
 
         return selection_count
 
+    def run_seeded_gt_trial(self):
+
+        # Increment trial counter
+        self.current_trial += 1
+        self.data_logger.current_trial = self.current_trial
+        # initialize trial in data_logger
+        self.data_logger.start_trial(self.current_trial)
+
+        # Reset last selection time for new trial
+        self.last_selection_time = 0
+
+        self.logger.info(f"Starting gaze-triggered trial {self.current_trial}")
+
+        # --- Phase 1: Show static shapes with a spinning fixator ---
+        spin_duration = 1  # second
+        spin_start = core.getTime()
+        while core.getTime() - spin_start < spin_duration:
+            draw_static_shapes(self.preloaded_static_stimuli)
+            elapsed = core.getTime() - spin_start
+            self.fixator_stim.ori = (elapsed * 360) % 360
+            self.fixator_stim.draw()
+            self.win.flip()
+
+        draw_static_shapes(self.preloaded_static_stimuli)
+        self.win.flip()
+
+        if self.subjVariables.get('eyetracker') == "yes":
+            self.tracker.start_recording()
+
+        self.data_logger.log_trial_event(
+            trial_num=self.current_trial,
+            phase="gaze_triggered",
+            event_type="trial_start",
+            additional_info=f"shape_order={'-'.join(self.shape_order)}"
+        )
+
+        self.trial_start_time = core.getTime()
+        self.data_logger.trial_start_time = self.trial_start_time
+
+        # SEED FIRST SHAPE
+        first_shape = self.shape_order[0]
+        self.logger.info(f"Auto-triggering first shape: {first_shape}")
+        animation = self.animate_shape(first_shape)
+        while not animation.update(core.getTime()):
+            pass  # Wait for animation to complete
+
+        triggered_flags = {shape: False for shape in self.shape_order}
+        triggered_flags[first_shape] = True
+
+        selection_count = 1
+        last_selection_time = core.getTime()
+        last_triggered = {shape: 0 for shape in self.shape_order}
+        last_triggered[first_shape] = last_selection_time
+
+        max_trial_time = 20  # seconds
+        required_fixation = 0.25  # seconds
+        selection_timeout = 7 # seconds - max time between selections
+        initial_selection_timeout = 5 #seconds - max time to wait for first selection
+
+        # Setup dictionaries.
+        gaze_histories = {shape: [] for shape in self.shape_order}
+        cooldown = 5.0  # seconds cooldown
+
+        active_animation = None    # Currently running animation.
+        queued_animation = None    # Candidate for the next animation.
+
+        # Main loop: run until max_trial_time OR we've reached 4 selections and no animation is active.
+        while (core.getTime() - self.trial_start_time) < max_trial_time:
+
+            # If we've already reached 4 selections and no animation is playing, end the trial.
+            if selection_count >= 4 and active_animation is None:
+                break
+
+            current_time = core.getTime()
+
+            if selection_count == 0 and (current_time - self.trial_start_time) > initial_selection_timeout:
+                self.logger.info(
+                    f"No initial selection made within {initial_selection_timeout} seconds; terminating trial early.")
+                break
+
+            if selection_count > 0 and selection_count < 4 and active_animation is None and (
+                    current_time - last_selection_time) > selection_timeout:
+                self.logger.info(
+                    f"No selection for {selection_timeout} seconds after previous selection; terminating trial early.")
+                break
+
+            if self.subjVariables.get('eyetracker') == "yes":
+                gaze_sample = self.tracker.sample()
+            else:
+                gaze_sample = None
+
+            # Update active animation.
+            if active_animation is not None:
+                if active_animation.update(current_time):
+                    last_triggered[active_animation.current_shape] = current_time
+                    active_animation = None
+                    queued_animation = None  # Clear queued candidate when one finishes.
+
+            # In the run_gt_trial method, when promoting a queued animation:
+            if active_animation is None and queued_animation is not None:
+                # Only promote if we haven't reached 4 selections
+                if selection_count < 4:
+                    # At this point, the queued animation is being activated,
+                    # so we need to log it as an executed (non-queued) selection
+                    selection_count += 1
+                    last_selection_time = current_time
+                    for other_shape in self.shape_order:
+                        if other_shape != active_animation.current_shape:
+                            last_triggered[other_shape] = 0
+
+                    # Log that the queued selection is now being executed
+                    self.data_logger.log_selection(
+                        trial_num=self.current_trial,
+                        selection_num=selection_count,  # This is the current selection number
+                        shape=queued_animation.current_shape,
+                        position=self.shape_positions[queued_animation.current_shape],
+                        fixation_duration=0,  # We don't know the original fixation duration here
+                        queued=False,  # It's no longer queued
+                        was_executed=True  # It's being executed now
+                    )
+
+                    active_animation = queued_animation
+                    queued_animation = None
+
+            self.logger.info(gaze_sample)
+            # Process gaze sample for each shape.
+            for shape in self.shape_order:
+                if self.shapeAOIs[shape].contains(gaze_sample):
+                    gaze_histories[shape].append((gaze_sample, current_time))
+                    fixation_duration = self._fixation_duration(gaze_histories[shape])
+
+                    if fixation_duration >= required_fixation:
+
+                        # Immediate trigger only if no animation is active and we haven't reached 4.
+                        if active_animation is None and selection_count < 4:
+                            # Enforce cooldown.
+                            if current_time - last_triggered[shape] < cooldown:
+                                continue
+
+                            selection_count += 1
+                            last_selection_time = current_time
+                            self.logger.info(f"Shape {shape} triggered via fixation (immediate).")
+
+                            # Log the selection event
+                            self.data_logger.log_selection(
+                                trial_num=self.current_trial,
+                                selection_num=selection_count,
+                                shape=shape,
+                                position=self.shape_positions[shape],
+                                fixation_duration=fixation_duration,
+                                queued=False,
+                                was_executed=True,
+                                selection_time=current_time
+                            )
+
+                            active_animation = LoomAnimation(
+                                stim=self.preloaded_static_stimuli[shape],
+                                win=self.win,
+                                pos=self.shape_positions[shape],
+                                current_shape=shape,
+                                background_stimuli=self.preloaded_static_stimuli,
+                                init_size=self.init_size,
+                                target_size=450,
+                                init_opacity=self.init_opacity,
+                                target_opacity=1.0,
+                                loom_duration=1.0,
+                                jiggle_duration=0.5,
+                                fade_duration=0.25,
+                                jiggle_amplitude=5,
+                                jiggle_frequency=2,
+                                loom_sound=self.loom_sounds[shape],
+                                selection_sound=self.selection_sounds[shape]
+                            )
+
+                            triggered_flags[shape] = True
+                            gaze_histories[shape] = []
+                            last_triggered[shape] = current_time
+                            for other_shape in self.shape_order:
+                                if other_shape != shape:
+                                    last_triggered[other_shape] = 0  # Reset cooldown for others
+
+                        # If an animation is active, allow queuing only if selection_count is less than 3.
+                        elif active_animation is not None and selection_count < 3:
+                            if queued_animation is None or queued_animation.current_shape != shape:
+                                self.logger.info(f"Shape {shape} queued as next candidate (N+1)")
+
+                                # Log the queued selection - note was_executed=False because it's not shown yet
+                                self.data_logger.log_selection(
+                                    trial_num=self.current_trial,
+                                    selection_num=selection_count + 1,  # This will be the next selection number
+                                    shape=shape,
+                                    position=self.shape_positions[shape],
+                                    fixation_duration=fixation_duration,
+                                    queued=True,
+                                    was_executed=False,  # Not executed yet, just queued
+                                    selection_time=current_time
+                                )
+
+                                queued_animation = LoomAnimation(
+                                    stim=self.preloaded_static_stimuli[shape],
+                                    win=self.win,
+                                    pos=self.shape_positions[shape],
+                                    current_shape=shape,
+                                    background_stimuli=self.preloaded_static_stimuli,
+                                    init_size=self.init_size,
+                                    target_size=450,
+                                    init_opacity=self.init_opacity,
+                                    target_opacity=1.0,
+                                    loom_duration=1.0,
+                                    jiggle_duration=0.5,
+                                    fade_duration=0.25,
+                                    jiggle_amplitude=5,
+                                    jiggle_frequency=2,
+                                    loom_sound=self.loom_sounds[shape],
+                                    selection_sound=self.selection_sounds[shape]
+                                )
+                                triggered_flags[shape] = True
+                                gaze_histories[shape] = []
+                                #last_triggered[shape] = current_time
+                else:
+                    # Clear history if gaze is not on the AOI.
+                    gaze_histories[shape] = []
+
+            # If nothing is active, refresh the static display.
+            if active_animation is None and queued_animation is None:
+                draw_static_shapes(self.preloaded_static_stimuli)
+                self.win.flip()
+
+            # End of trial processes
+            # 1. Mark any queued selection that wasn't executed
+            if queued_animation is not None:
+                self.data_logger.log_selection(
+                    trial_num=self.current_trial,
+                    selection_num=selection_count + 1,
+                    shape=queued_animation.current_shape,
+                    position=self.shape_positions[queued_animation.current_shape],
+                    fixation_duration=0,  # Unknown at this point
+                    queued=True,
+                    was_executed=False
+                )
+
+            # 2. Record trial summary
+        self.data_logger.end_trial(self.current_trial)
+
+         # 3. Stop eyetracker recording
+
+        if self.subjVariables.get('eyetracker') == "yes":
+            self.tracker.stop_recording()
+
+        return selection_count
+
     def run_ag_trial(self, video_name):
         """
         Play an attention-getting video.
