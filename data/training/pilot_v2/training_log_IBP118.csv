@@ -1,0 +1,174 @@
+trial_num,phase,timestamp,event_type,shape,position,additional_info
+0,AG,24.554288300103508,videoStart,all,center,video=balloons_5
+0,AG,29.731290800031275,videoEnd,all,center,"video=balloons_5, duration=5.15s"
+1,training,31.254702600068413,trial_start,all,,shape_order=circle-cross-star-t
+1,training,32.25932280009147,fixator_end,all,,
+1,training,33.276727900025435,animation_start,circle,"(-480.0, -270.0)",sequence_position=1/4
+1,training,35.05801090004388,animation_end,circle,"(-480.0, -270.0)",duration=1781ms
+1,training,35.07238800008781,animation_start,cross,"(480.0, -270.0)",sequence_position=2/4
+1,training,36.87425130000338,animation_end,cross,"(480.0, -270.0)",duration=1802ms
+1,training,37.89217860007193,animation_start,star,"(-480.0, 270.0)",sequence_position=3/4
+1,training,39.67418680002447,animation_end,star,"(-480.0, 270.0)",duration=1782ms
+1,training,40.69222190009896,animation_start,t,"(480.0, 270.0)",sequence_position=4/4
+1,training,42.50432740000542,animation_end,t,"(480.0, 270.0)",duration=1812ms
+1,training,42.52198320010211,trial_end,all,,shapes_shown=circle-cross-star-t
+2,training,43.52870400005486,trial_start,all,,shape_order=circle-cross-star-t
+2,training,44.53680710005574,fixator_end,all,,
+2,training,45.05764120002277,animation_start,circle,"(-480.0, -270.0)",sequence_position=1/4
+2,training,46.85206480009947,animation_end,circle,"(-480.0, -270.0)",duration=1794ms
+2,training,47.121246200054884,animation_start,cross,"(480.0, -270.0)",sequence_position=2/4
+2,training,48.902003000024706,animation_end,cross,"(480.0, -270.0)",duration=1781ms
+2,training,49.42114069999661,animation_start,star,"(-480.0, 270.0)",sequence_position=3/4
+2,training,51.23286220000591,animation_end,star,"(-480.0, 270.0)",duration=1812ms
+2,training,51.25180010008626,animation_start,t,"(480.0, 270.0)",sequence_position=4/4
+2,training,53.06764510006178,animation_end,t,"(480.0, 270.0)",duration=1816ms
+2,training,53.08334160002414,trial_end,all,,shapes_shown=circle-cross-star-t
+3,training,54.099530300009064,trial_start,all,,shape_order=circle-cross-star-t
+3,training,55.11643560009543,fixator_end,all,,
+3,training,56.13712690002285,animation_start,circle,"(-480.0, -270.0)",sequence_position=1/4
+3,training,57.915378500008956,animation_end,circle,"(-480.0, -270.0)",duration=1778ms
+3,training,57.93319030001294,animation_start,cross,"(480.0, -270.0)",sequence_position=2/4
+3,training,59.715114400023594,animation_end,cross,"(480.0, -270.0)",duration=1782ms
+3,training,60.48448070010636,animation_start,star,"(-480.0, 270.0)",sequence_position=3/4
+3,training,62.28071190009359,animation_end,star,"(-480.0, 270.0)",duration=1796ms
+3,training,62.799122700002044,animation_start,t,"(480.0, 270.0)",sequence_position=4/4
+3,training,64.61394760000985,animation_end,t,"(480.0, 270.0)",duration=1815ms
+3,training,64.6319678000873,trial_end,all,,shapes_shown=circle-cross-star-t
+4,training,65.63829310005531,trial_start,all,,shape_order=circle-cross-star-t
+4,training,66.64670350006782,fixator_end,all,,
+4,training,67.66711910010781,animation_start,circle,"(-480.0, -270.0)",sequence_position=1/4
+4,training,69.45149300002959,animation_end,circle,"(-480.0, -270.0)",duration=1784ms
+4,training,69.7148324000882,animation_start,cross,"(480.0, -270.0)",sequence_position=2/4
+4,training,71.5135208000429,animation_end,cross,"(480.0, -270.0)",duration=1799ms
+4,training,71.53326990001369,animation_start,star,"(-480.0, 270.0)",sequence_position=3/4
+4,training,73.32910830003675,animation_end,star,"(-480.0, 270.0)",duration=1796ms
+4,training,74.09876419999637,animation_start,t,"(480.0, 270.0)",sequence_position=4/4
+4,training,75.89537530008238,animation_end,t,"(480.0, 270.0)",duration=1797ms
+4,training,75.91199920000508,trial_end,all,,shapes_shown=circle-cross-star-t
+4,AG,76.92905470007099,videoStart,all,center,video=bouncyballs_5
+4,AG,82.04645450005773,videoEnd,all,center,"video=bouncyballs_5, duration=5.11s"
+5,training,83.56420560006518,trial_start,all,,shape_order=circle-cross-star-t
+5,training,84.57357290002983,fixator_end,all,,
+5,training,85.09391500009224,animation_start,circle,"(-480.0, -270.0)",sequence_position=1/4
+5,training,86.90583780000452,animation_end,circle,"(-480.0, -270.0)",duration=1812ms
+5,training,86.92359850008506,animation_start,cross,"(480.0, -270.0)",sequence_position=2/4
+5,training,88.70517190010287,animation_end,cross,"(480.0, -270.0)",duration=1782ms
+5,training,88.97582030005287,animation_start,star,"(-480.0, 270.0)",sequence_position=3/4
+5,training,90.77105330000632,animation_end,star,"(-480.0, 270.0)",duration=1795ms
+5,training,91.04052750009578,animation_start,t,"(480.0, 270.0)",sequence_position=4/4
+5,training,92.837022599997,animation_end,t,"(480.0, 270.0)",duration=1796ms
+5,training,92.85462340002414,trial_end,all,,shapes_shown=circle-cross-star-t
+6,training,93.86058700003196,trial_start,all,,shape_order=circle-cross-star-t
+6,training,94.87046720006038,fixator_end,all,,
+6,training,95.63676030002534,animation_start,circle,"(-480.0, -270.0)",sequence_position=1/4
+6,training,97.43622550007422,animation_end,circle,"(-480.0, -270.0)",duration=1799ms
+6,training,97.95450510003138,animation_start,cross,"(480.0, -270.0)",sequence_position=2/4
+6,training,99.75175000005402,animation_end,cross,"(480.0, -270.0)",duration=1797ms
+6,training,100.77129220007919,animation_start,star,"(-480.0, 270.0)",sequence_position=3/4
+6,training,102.5840659000678,animation_end,star,"(-480.0, 270.0)",duration=1813ms
+6,training,103.60353510000277,animation_start,t,"(480.0, 270.0)",sequence_position=4/4
+6,training,105.4162190000061,animation_end,t,"(480.0, 270.0)",duration=1813ms
+6,training,105.43445070006419,trial_end,all,,shapes_shown=circle-cross-star-t
+7,training,106.44069529999979,trial_start,all,,shape_order=circle-cross-star-t
+7,training,107.44959329999983,fixator_end,all,,
+7,training,107.96888940001372,animation_start,circle,"(-480.0, -270.0)",sequence_position=1/4
+7,training,109.78275480004959,animation_end,circle,"(-480.0, -270.0)",duration=1814ms
+7,training,110.0503942000214,animation_start,cross,"(480.0, -270.0)",sequence_position=2/4
+7,training,111.84823490004055,animation_end,cross,"(480.0, -270.0)",duration=1798ms
+7,training,112.36788340006024,animation_start,star,"(-480.0, 270.0)",sequence_position=3/4
+7,training,114.18160730006639,animation_end,star,"(-480.0, 270.0)",duration=1814ms
+7,training,114.44884250010364,animation_start,t,"(480.0, 270.0)",sequence_position=4/4
+7,training,116.24815890006721,animation_end,t,"(480.0, 270.0)",duration=1799ms
+7,training,116.2652165000327,trial_end,all,,shapes_shown=circle-cross-star-t
+8,training,117.28172800003085,trial_start,all,,shape_order=circle-cross-star-t
+8,training,118.29745519999415,fixator_end,all,,
+8,training,118.81399130006321,animation_start,circle,"(-480.0, -270.0)",sequence_position=1/4
+8,training,120.61371700000018,animation_end,circle,"(-480.0, -270.0)",duration=1800ms
+8,training,121.63319369999226,animation_start,cross,"(480.0, -270.0)",sequence_position=2/4
+8,training,123.44732810009737,animation_end,cross,"(480.0, -270.0)",duration=1814ms
+8,training,124.46475700009614,animation_start,star,"(-480.0, 270.0)",sequence_position=3/4
+8,training,126.26156260003336,animation_end,star,"(-480.0, 270.0)",duration=1797ms
+8,training,126.52883060008753,animation_start,t,"(480.0, 270.0)",sequence_position=4/4
+8,training,128.34486800001469,animation_end,t,"(480.0, 270.0)",duration=1816ms
+8,training,128.3586409999989,trial_end,all,,shapes_shown=circle-cross-star-t
+8,AG,129.36646809999365,videoStart,all,center,video=galaxies_5
+8,AG,134.54999100009445,videoEnd,all,center,"video=galaxies_5, duration=5.15s"
+9,training,136.06640780007,trial_start,all,,shape_order=circle-cross-star-t
+9,training,137.07523720001336,fixator_end,all,,
+9,training,137.59426060004625,animation_start,circle,"(-480.0, -270.0)",sequence_position=1/4
+9,training,139.40557770000305,animation_end,circle,"(-480.0, -270.0)",duration=1811ms
+9,training,140.42386390001047,animation_start,cross,"(480.0, -270.0)",sequence_position=2/4
+9,training,142.23740880005062,animation_end,cross,"(480.0, -270.0)",duration=1814ms
+9,training,143.25714130001143,animation_start,star,"(-480.0, 270.0)",sequence_position=3/4
+9,training,145.07003010006156,animation_end,star,"(-480.0, 270.0)",duration=1813ms
+9,training,145.33955850009806,animation_start,t,"(480.0, 270.0)",sequence_position=4/4
+9,training,147.15842650004197,animation_end,t,"(480.0, 270.0)",duration=1819ms
+9,training,147.1698476000456,trial_end,all,,shapes_shown=circle-cross-star-t
+10,training,148.17649390001316,trial_start,all,,shape_order=circle-cross-star-t
+10,training,149.1861919000512,fixator_end,all,,
+10,training,149.45533320005052,animation_start,circle,"(-480.0, -270.0)",sequence_position=1/4
+10,training,151.25355860008858,animation_end,circle,"(-480.0, -270.0)",duration=1798ms
+10,training,151.77110680006444,animation_start,cross,"(480.0, -270.0)",sequence_position=2/4
+10,training,153.58425700000953,animation_end,cross,"(480.0, -270.0)",duration=1813ms
+10,training,153.60218510008417,animation_start,star,"(-480.0, 270.0)",sequence_position=3/4
+10,training,155.41682820010465,animation_end,star,"(-480.0, 270.0)",duration=1815ms
+10,training,155.93542570003774,animation_start,t,"(480.0, 270.0)",sequence_position=4/4
+10,training,157.73343450005632,animation_end,t,"(480.0, 270.0)",duration=1798ms
+10,training,157.74920820002444,trial_end,all,,shapes_shown=circle-cross-star-t
+11,training,158.76581710006576,trial_start,all,,shape_order=circle-cross-star-t
+11,training,159.78419100004248,fixator_end,all,,
+11,training,160.5518933000276,animation_start,circle,"(-480.0, -270.0)",sequence_position=1/4
+11,training,162.36572420003358,animation_end,circle,"(-480.0, -270.0)",duration=1814ms
+11,training,163.38567720004357,animation_start,cross,"(480.0, -270.0)",sequence_position=2/4
+11,training,165.19945870002266,animation_end,cross,"(480.0, -270.0)",duration=1814ms
+11,training,165.2160797000397,animation_start,star,"(-480.0, 270.0)",sequence_position=3/4
+11,training,167.0319271000335,animation_end,star,"(-480.0, 270.0)",duration=1816ms
+11,training,168.0498623000458,animation_start,t,"(480.0, 270.0)",sequence_position=4/4
+11,training,169.84536390006542,animation_end,t,"(480.0, 270.0)",duration=1795ms
+11,training,169.8639498000266,trial_end,all,,shapes_shown=circle-cross-star-t
+12,training,170.88230640010443,trial_start,all,,shape_order=circle-cross-star-t
+12,training,171.89695110009052,fixator_end,all,,
+12,training,171.91267980006523,animation_start,circle,"(-480.0, -270.0)",sequence_position=1/4
+12,training,173.71272100007627,animation_end,circle,"(-480.0, -270.0)",duration=1800ms
+12,training,174.4826633000048,animation_start,cross,"(480.0, -270.0)",sequence_position=2/4
+12,training,176.27616360003594,animation_end,cross,"(480.0, -270.0)",duration=1793ms
+12,training,176.54493720002938,animation_start,star,"(-480.0, 270.0)",sequence_position=3/4
+12,training,178.34233500005212,animation_end,star,"(-480.0, 270.0)",duration=1797ms
+12,training,178.61246920004487,animation_start,t,"(480.0, 270.0)",sequence_position=4/4
+12,training,180.40869820001535,animation_end,t,"(480.0, 270.0)",duration=1796ms
+12,training,180.42735620005988,trial_end,all,,shapes_shown=circle-cross-star-t
+13,gaze_triggered,182.70959750004113,trial_start,all,,shape_order=circle-cross-star-t
+13,gaze_triggered,182.7111414000392,selection,circle,"(-480.0, -270.0)","executed=True, fixation_duration=0ms, rt=0ms"
+13,gaze_triggered,187.72564650001004,trial_end,all,,"selections=1, shapes=circle, positions=(-480.0, -270.0), timings=0"
+14,gaze_triggered,190.00683680002112,trial_start,all,,shape_order=circle-cross-star-t
+14,gaze_triggered,190.00899550004397,selection,circle,"(-480.0, -270.0)","executed=True, fixation_duration=0ms, rt=0ms"
+14,gaze_triggered,195.0229811000172,trial_end,all,,"selections=1, shapes=circle, positions=(-480.0, -270.0), timings=0"
+14,AG,196.02962230006233,videoStart,all,center,video=kangaroo_5
+14,AG,201.24501780001447,videoEnd,all,center,"video=kangaroo_5, duration=5.18s"
+15,gaze_triggered,204.03685980010778,trial_start,all,,shape_order=circle-cross-star-t
+15,gaze_triggered,204.03886140009854,selection,circle,"(-480.0, -270.0)","executed=True, fixation_duration=0ms, rt=0ms"
+15,gaze_triggered,209.05083710001782,trial_end,all,,"selections=1, shapes=circle, positions=(-480.0, -270.0), timings=0"
+16,gaze_triggered,211.3337288000621,trial_start,all,,shape_order=circle-cross-star-t
+16,gaze_triggered,211.33560680004302,selection,circle,"(-480.0, -270.0)","executed=True, fixation_duration=0ms, rt=0ms"
+16,gaze_triggered,216.34937760001048,trial_end,all,,"selections=1, shapes=circle, positions=(-480.0, -270.0), timings=0"
+16,AG,217.36618980008643,videoStart,all,center,video=balloons_5
+16,AG,222.53121730010025,videoEnd,all,center,"video=balloons_5, duration=5.14s"
+17,gaze_triggered,225.3309878000291,trial_start,all,,shape_order=circle-cross-star-t
+17,gaze_triggered,225.33954020007513,selection,circle,"(-480.0, -270.0)","executed=True, fixation_duration=0ms, rt=0ms"
+17,gaze_triggered,230.34592910006177,trial_end,all,,"selections=1, shapes=circle, positions=(-480.0, -270.0), timings=0"
+18,gaze_triggered,232.6298734000884,trial_start,all,,shape_order=circle-cross-star-t
+18,gaze_triggered,232.63156170002185,selection,circle,"(-480.0, -270.0)","executed=True, fixation_duration=0ms, rt=0ms"
+18,gaze_triggered,237.64310740004294,trial_end,all,,"selections=1, shapes=circle, positions=(-480.0, -270.0), timings=0"
+18,AG,238.6616931000026,videoStart,all,center,video=bouncyballs_5
+18,AG,243.80562870006543,videoEnd,all,center,"video=bouncyballs_5, duration=5.14s"
+19,gaze_triggered,246.6056703000795,trial_start,all,,shape_order=circle-cross-star-t
+19,gaze_triggered,246.60731210000813,selection,circle,"(-480.0, -270.0)","executed=True, fixation_duration=0ms, rt=0ms"
+19,gaze_triggered,251.6209217000287,trial_end,all,,"selections=1, shapes=circle, positions=(-480.0, -270.0), timings=0"
+20,gaze_triggered,253.9206505001057,trial_start,all,,shape_order=circle-cross-star-t
+20,gaze_triggered,253.92270740005188,selection,circle,"(-480.0, -270.0)","executed=True, fixation_duration=0ms, rt=0ms"
+20,gaze_triggered,258.93874000001233,trial_end,all,,"selections=1, shapes=circle, positions=(-480.0, -270.0), timings=0"
+20,AG,259.9471834000433,videoStart,all,center,video=galaxies_5
+20,AG,265.09970160003286,videoEnd,all,center,"video=galaxies_5, duration=5.15s"
+21,gaze_triggered,267.89816620002966,trial_start,all,,shape_order=circle-cross-star-t
+21,gaze_triggered,267.9000144000165,selection,circle,"(-480.0, -270.0)","executed=True, fixation_duration=0ms, rt=0ms"
+21,gaze_triggered,272.91612830001395,trial_end,all,,"selections=1, shapes=circle, positions=(-480.0, -270.0), timings=0"
