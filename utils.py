@@ -214,6 +214,17 @@ def draw_static_shapes(preloaded_stimuli):
         stim.draw()
 
 
+def draw_static_videos(preloaded_videos):
+    """
+    Draws preloaded video stimuli paused on first frame.
+    """
+    for video in preloaded_videos.values():
+        # Ensure video is paused (will show current frame)
+        if not video.isFinished:
+            video.pause()
+        video.draw()
+
+
 def check_fixation(gaze_history, required_duration=0.5):
     """
     Given a list of gaze samples (with timestamps), return True if the fixation
@@ -447,3 +458,152 @@ class LoomAnimation:
         self.state = self.COMPLETE
         self.reset_stimulus()
         self.draw()
+
+
+class VideoAnimation:
+    """
+    Animation class that handles video playback for box reveal animations.
+    Videos show a box that raises (.5s), displays an object (.5s), and closes (.5s) = 1.5s total.
+
+    Parameters:
+    -----------
+    video : psychopy.visual.MovieStim
+        The video stimulus to play
+    win : psychopy.visual.Window
+        The window to display the animation in
+    pos : tuple (x, y)
+        The position of the video in window coordinates
+    current_box : str
+        The name/identifier of the box being animated (e.g., "cross", "stripes")
+    current_object : str
+        The name/identifier of the object being revealed (e.g., "ball", "cat")
+    background_videos : dict
+        Dictionary of {box_name: video_stim} for all background boxes
+    video_duration : float
+        Duration of the video playback in seconds (default: 1.5)
+    selection_sound : psychopy.sound.Sound
+        Sound to play when video starts playing (default: None)
+    """
+    # Define explicit states
+    PAUSED_FIRST = "paused_first"
+    PLAYING = "playing"
+    PAUSED_LAST = "paused_last"
+    COMPLETE = "complete"
+
+    def __init__(self, video, win, pos, current_box, current_object, background_videos,
+                 video_duration=1.5, selection_sound=None):
+        self.video = video
+        self.win = win
+        self.pos = pos
+        self.current_box = current_box
+        self.current_object = current_object
+        self.background_videos = background_videos
+        self.video_duration = video_duration
+        self.selection_sound = selection_sound
+        self.selection_sound_played = False
+
+        # Set video properties
+        self.video.pos = pos
+        self.video.loop = False
+        self.video.autoDraw = False
+
+        # Animation state
+        from psychopy import core
+        self.start_time = core.getTime()
+        self.state = self.PAUSED_FIRST
+        
+        # Stop and reset video to beginning, then pause
+        self.video.stop()
+        self.video.pause()
+
+    def seek_to_first_frame(self):
+        """Reset video to first frame and pause"""
+        self.video.stop()
+        self.video.pause()
+        self.state = self.PAUSED_FIRST
+
+    def play(self, current_time=None):
+        """
+        Start playing the video from the beginning.
+
+        Parameters:
+        -----------
+        current_time : float, optional
+            Current time in seconds. If None, gets current time.
+
+        Returns:
+        --------
+        bool
+            True if the video is complete, False otherwise
+        """
+        from psychopy import core
+        if current_time is None:
+            current_time = core.getTime()
+
+        # Stop and restart video from beginning
+        self.video.stop()
+        self.video.play()
+        self.start_time = current_time
+        self.state = self.PLAYING
+        
+        # Play selection sound when video starts
+        if self.selection_sound is not None and not self.selection_sound_played:
+            self.selection_sound.play()
+            self.selection_sound_played = True
+
+    def update(self, current_time=None):
+        """
+        Update the video playback state.
+
+        Parameters:
+        -----------
+        current_time : float, optional
+            Current time in seconds. If None, gets current time.
+
+        Returns:
+        --------
+        bool
+            True if the video playback is complete, False otherwise
+        """
+        from psychopy import core
+        if current_time is None:
+            current_time = core.getTime()
+
+        if self.state == self.PLAYING:
+            elapsed = current_time - self.start_time
+            if elapsed >= self.video_duration:
+                # Video playback complete, pause on current frame
+                self.video.pause()
+                self.state = self.PAUSED_LAST
+                return True
+            elif self.video.isFinished:
+                # Video naturally finished
+                self.video.pause()
+                self.state = self.PAUSED_LAST
+                return True
+
+        self.draw()
+        return False
+
+    def draw(self):
+        """Draw the current video frame and background videos to the window"""
+        # Draw the background videos if available
+        if self.background_videos:
+            for box_name, bg_video in self.background_videos.items():
+                if box_name != self.current_box:
+                    # Draw background videos paused on first frame
+                    bg_video.draw()
+
+        # Draw the current video
+        self.video.draw()
+        self.win.flip()
+
+    def is_complete(self):
+        """Check if video playback is complete"""
+        return self.state == self.PAUSED_LAST
+
+    def reset_to_first_frame(self):
+        """Reset video to first frame and pause"""
+        self.seek_to_first_frame()
+        # Reset sound flag so it can play again next time
+        self.selection_sound_played = False

@@ -7,6 +7,7 @@ from utils import *
 from data_logger import *
 import tobii_research as tr
 from psychopy.hardware import keyboard
+from psychopy import core, visual, event, libtime
 
 import constants
 
@@ -90,6 +91,10 @@ class InfantEyetrackingExperiment:
 
         self.ag_video_list = ['balloons_5', 'bouncyballs_5', 'galaxies_5', 'kangaroo_5']
         self.current_ag_index = 0  # Keep track of which AG video to play next
+
+        # Box and object definitions
+        self.box_types = ["cross", "stripes", "dots", "grid"]  # 4 box styles
+        self.objects = ["ball", "cat", "cookie", "cupcake", "dog", "truck"]  # 6 objects
 
         # Pre-experiment setup: subject info entry and data file initialization.
         self.initialize_subj_info()
@@ -262,10 +267,6 @@ class InfantEyetrackingExperiment:
         self.stars = loadFiles(self.AGPath, ['.jpg'], 'image', self.win)
 
         self.image_files = {
-            "circle": os.path.join(self.imagePath, "circle.png"),
-            "cross": os.path.join(self.imagePath, "cross.png"),
-            "star": os.path.join(self.imagePath, "star.png"),
-            "t": os.path.join(self.imagePath, "t.png"),
             "fixator": os.path.join(self.imagePath, "spinning-wheel.png")
             }
         self.fixator_stim = visual.ImageStim(
@@ -277,32 +278,33 @@ class InfantEyetrackingExperiment:
                 units='pix',
                 ori=0
             )
-        self.preloaded_static_stimuli = {}
-        for shape, pos in self.shape_positions.items():
-            self.preloaded_static_stimuli[shape] = visual.ImageStim(
-                self.win,
-                image=self.image_files[shape],
-                pos=pos,
-                size=300,          # Use your desired initial size.
-                opacity=0.3,       # Use your desired initial opacity.
-                units='pix',
-                ori=0
-            )
+        
+        # Load box videos - format: [boxstyle]_[object].mp4
+        # We'll create video stimuli for each box-object combination
+        self.box_videos = {}  # Will store {box_name: {object_name: video_stim}}
+        for box in self.box_types:
+            self.box_videos[box] = {}
+            for obj in self.objects:
+                video_filename = f"{box}_{obj}.mp4"
+                video_path = os.path.join(self.moviePath, video_filename)
+                if os.path.exists(video_path):
+                    video = visual.MovieStim(self.win, video_path, noAudio=True, loop=False)
+                    self.box_videos[box][obj] = video
+                else:
+                    self.logger.warning(f"Video file not found: {video_path}")
 
-        self.loom_sounds = {}
+        # Preloaded video stimuli will be set up in setup_stimuli_assignment
+        # after objects are randomly assigned to boxes
+        self.preloaded_video_stimuli = {}
+
+        # Assign selection sounds to boxes (similar to how they were assigned to shapes)
         self.selection_sounds = {}
-
-        loom_sound_keys = list(loomSoundMatrix.keys())
-        for i, shape in enumerate(self.shape_order):
-            # Cycle through loom sounds if there are fewer sounds than shapes.
-            key = loom_sound_keys[i % len(loom_sound_keys)]
-            self.loom_sounds[shape] = loomSoundMatrix[key]
-
         selection_sound_keys = list(selectionSoundMatrix.keys())
-        for i, shape in enumerate(self.shape_order):
-            # Cycle through loom sounds if there are fewer sounds than shapes.
+        for i, box in enumerate(self.box_types):
+            # Cycle through selection sounds if there are fewer sounds than boxes
             key = selection_sound_keys[i % len(selection_sound_keys)]
-            self.selection_sounds[shape] = selectionSoundMatrix[key]
+            self.selection_sounds[box] = selectionSoundMatrix[key]
+            self.logger.info(f"Assigned selection sound '{key}' to box '{box}'")
 
         self.logger.info("Loaded Files")
 
@@ -323,25 +325,59 @@ class InfantEyetrackingExperiment:
         return video
 
     def setup_stimuli_assignment(self):
-        self.shape_order = ["circle", "cross", "star", "t"]
-        
-        self.shape_positions = {
-            "circle": self.pos["bottomLeft"],
-            "cross": self.pos["bottomRight"],
-            "star": self.pos["topLeft"],
-            "t": self.pos["topRight"]
+        """
+        Assign boxes to positions and randomly assign objects to boxes for this trial.
+        Boxes stay in the same positions, but objects are randomly sampled without replacement.
+        """
+        # Box positions (fixed throughout experiment)
+        # Order: TopLeft, BottomLeft, TopRight, BottomRight
+        self.box_positions = {
+            "cross": self.pos["topLeft"],
+            "stripes": self.pos["bottomLeft"],
+            "dots": self.pos["topRight"],
+            "grid": self.pos["bottomRight"]
         }
+        
+        # Box order for training phase playback
+        self.box_order = ["cross", "stripes", "dots", "grid"]  # TopLeft, BottomLeft, TopRight, BottomRight
 
-        self.shapeAOIs = {}
+        # Randomly sample 4 objects from 6 without replacement
+        import random
+        selected_objects = random.sample(self.objects, 4)
+        
+        # Assign objects to boxes
+        self.box_object_assignment = {}
+        for i, box in enumerate(self.box_order):
+            self.box_object_assignment[box] = selected_objects[i]
+
+        self.logger.info(f"Box positions assigned: {self.box_positions}")
+        self.logger.info(f"Object assignments: {self.box_object_assignment}")
+
+        # Create preloaded video stimuli for this trial
+        self.preloaded_video_stimuli = {}
+        for box, obj in self.box_object_assignment.items():
+            if box in self.box_videos and obj in self.box_videos[box]:
+                video = self.box_videos[box][obj]
+                video.pos = self.box_positions[box]
+                video.size = (500, 500)  # Set appropriate size
+                # Seek to first frame and pause
+                video.seek(0)
+                video.pause()
+                self.preloaded_video_stimuli[box] = video
+            else:
+                self.logger.error(f"Video not found for {box}_{obj}")
+
+        # Setup AOIs for gaze detection
+        self.boxAOIs = {}
         aoi_width = 500
         aoi_height = 500
 
-        for shape, pos in self.shape_positions.items():
+        for box, pos in self.box_positions.items():
             pygaze_pos = psychopy_to_pygaze(pos, x_offset = aoi_width/2, y_offset = aoi_height/2)
             print(pygaze_pos)
-            self.shapeAOIs[shape] = aoi.AOI('rectangle', pos=pygaze_pos, size=(aoi_width, aoi_height))
+            self.boxAOIs[box] = aoi.AOI('rectangle', pos=pygaze_pos, size=(aoi_width, aoi_height))
 
-        self.logger.info(f"Shape positions assigned: {self.shape_positions}")
+        self.logger.info(f"Box AOIs created for {len(self.boxAOIs)} boxes")
 
 
     def display_start_screen(self):
@@ -358,7 +394,7 @@ class InfantEyetrackingExperiment:
         self.disp.show()
 
     def run_training_trial(self):
-        # --- Phase 0: Setup eyetracking ---
+        # --- Phase 0: Setup eyetracking and reassign objects ---
         # Increment trial counter
         self.current_trial += 1
         self.trial_start_time = core.getTime()
@@ -366,24 +402,41 @@ class InfantEyetrackingExperiment:
         self.data_logger.trial_start_time = self.trial_start_time
         self.data_logger.current_trial = self.current_trial
 
+        # Reassign objects to boxes for this trial (random sampling without replacement)
+        import random
+        selected_objects = random.sample(self.objects, 4)
+        for i, box in enumerate(self.box_order):
+            self.box_object_assignment[box] = selected_objects[i]
+            # Update preloaded video stimuli
+            if box in self.box_videos and selected_objects[i] in self.box_videos[box]:
+                video = self.box_videos[box][selected_objects[i]]
+                video.pos = self.box_positions[box]
+                video.size = (500, 500)
+                video.stop()
+                video.pause()
+                self.preloaded_video_stimuli[box] = video
+
         # Start eyetracking recording for this trial
         if self.subjVariables.get('eyetracker') == "yes":
             self.tracker.start_recording()
 
         # Log trial start
+        box_obj_info = '-'.join([f"{box}_{self.box_object_assignment[box]}" for box in self.box_order])
         self.data_logger.log_trial_event(
             trial_num=self.current_trial,
             phase="training",
             event_type="trial_start",
-            additional_info=f"shape_order={'-'.join(self.shape_order)}"
+            shape="all",
+            position="",
+            additional_info=f"box_order={'-'.join(self.box_order)}, assignments={box_obj_info}"
         )
 
-        # --- Phase 1: Show preloaded static shapes with a spinning wheel ---
-        spin_duration = 1 #second
+        # --- Phase 1: Show preloaded static videos (paused on first frame) with a spinning wheel ---
+        spin_duration = 1  # second
         spin_start = core.getTime()
 
         while core.getTime() - spin_start < spin_duration:
-            draw_static_shapes(self.preloaded_static_stimuli)
+            draw_static_videos(self.preloaded_video_stimuli)
             elapsed = core.getTime() - spin_start
             self.fixator_stim.ori = (elapsed * 360) % 360
             self.fixator_stim.draw()
@@ -392,73 +445,94 @@ class InfantEyetrackingExperiment:
         self.data_logger.log_trial_event(
             trial_num=self.current_trial,
             phase="training",
-            event_type="fixator_end"
+            event_type="fixator_end",
+            shape="all",
+            position=""
         )
 
-        draw_static_shapes(self.preloaded_static_stimuli)
+        draw_static_videos(self.preloaded_video_stimuli)
         self.win.flip()
 
-        # --- Phase 2: Animate each shape ---
-        # Sequentially animate each shape in order.
-        for shape_index, shape in enumerate(self.shape_order):
-            libtime.pause(random.choice([0, 250, 500, 750, 1000]))
-            self.logger.info(f"Animating shape: {shape}")
+        # --- Phase 2: Play each video in order (TopLeft, BottomLeft, TopRight, BottomRight) ---
+        # Each video plays for 1.5s, then pauses on last frame
+        for box_index, box in enumerate(self.box_order):
+            obj = self.box_object_assignment[box]
+            self.logger.info(f"Playing video: {box}_{obj}")
             animation_start_time = self.data_logger.log_trial_event(
                 trial_num=self.current_trial,
                 phase="training",
-                event_type="animation_start",
-                shape=shape,
-                position=str(self.shape_positions[shape]),
-                additional_info=f"sequence_position={shape_index + 1}/{len(self.shape_order)}"
+                event_type="video_start",
+                shape=f"{box}_{obj}",
+                position=str(self.box_positions[box]),
+                additional_info=f"sequence_position={box_index + 1}/{len(self.box_order)}"
             )
 
-            stim = self.preloaded_static_stimuli[shape]
-
-            animation = LoomAnimation(
-                stim=stim,
-                win=self.win,
-                pos=self.shape_positions[shape],
-                current_shape=shape,
-                background_stimuli=self.preloaded_static_stimuli,
-                init_size=self.init_size,
-                target_size=450,
-                init_opacity=self.init_opacity,
-                target_opacity=1.0,
-                loom_duration=1.0,
-                jiggle_duration=0.5,
-                fade_duration=0.25,
-                jiggle_amplitude=5,
-                jiggle_frequency=2,
-                loom_sound=self.loom_sounds[shape],
-                selection_sound=self.selection_sounds[shape]
-            )
-            animation.run_to_completion()
-
+            video = self.preloaded_video_stimuli[box]
+            
+            # Stop and restart video from beginning, then play
+            video.stop()
+            video.play()
+            
+            # Play video for 1.5 seconds
+            video_end_time = animation_start_time + 1.5
+            while core.getTime() < video_end_time:
+                # Draw all videos (background ones paused, this one playing)
+                for bg_box, bg_video in self.preloaded_video_stimuli.items():
+                    if bg_box != box:
+                        bg_video.draw()
+                video.draw()
+                self.win.flip()
+            
+            # Pause video on current frame (last frame after 1.5s)
+            video.pause()
+            
             current_time = core.getTime()
 
             self.data_logger.log_trial_event(
                 trial_num=self.current_trial,
                 phase="training",
-                event_type="animation_end",
-                shape=shape,
-                position=str(self.shape_positions[shape]),
+                event_type="video_end",
+                shape=f"{box}_{obj}",
+                position=str(self.box_positions[box]),
                 additional_info=f"duration={(current_time - animation_start_time) * 1000:.0f}ms"
             )
 
-            draw_static_shapes(self.preloaded_static_stimuli)
+            # Show all videos paused (others on first frame, this one on last frame)
+            draw_static_videos(self.preloaded_video_stimuli)
             self.win.flip()
+
+        # Reset all videos to first frame at end of trial
+        for box in self.box_order:
+            video = self.preloaded_video_stimuli[box]
+            video.stop()
+            video.pause()
 
         self.data_logger.log_trial_event(
             trial_num=self.current_trial,
             phase="training",
             event_type="trial_end",
-            additional_info=f"shapes_shown={'-'.join(self.shape_order)}"
+            shape="all",
+            position="",
+            additional_info=f"boxes_shown={'-'.join(self.box_order)}"
         )
 
         if self.subjVariables.get('eyetracker') == "yes":
             self.tracker.stop_recording()
 
     def run_gt_trial(self):
+        # Reassign objects to boxes for this trial (random sampling without replacement)
+        import random
+        selected_objects = random.sample(self.objects, 4)
+        for i, box in enumerate(self.box_order):
+            self.box_object_assignment[box] = selected_objects[i]
+            # Update preloaded video stimuli
+            if box in self.box_videos and selected_objects[i] in self.box_videos[box]:
+                video = self.box_videos[box][selected_objects[i]]
+                video.pos = self.box_positions[box]
+                video.size = (500, 500)
+                video.stop()
+                video.pause()
+                self.preloaded_video_stimuli[box] = video
 
         # Increment trial counter
         self.current_trial += 1
@@ -471,27 +545,30 @@ class InfantEyetrackingExperiment:
 
         self.logger.info(f"Starting gaze-triggered trial {self.current_trial}")
 
-        # --- Phase 1: Show static shapes with a spinning fixator ---
+        # --- Phase 1: Show static videos (paused on first frame) with a spinning fixator ---
         spin_duration = 1  # second
         spin_start = core.getTime()
         while core.getTime() - spin_start < spin_duration:
-            draw_static_shapes(self.preloaded_static_stimuli)
+            draw_static_videos(self.preloaded_video_stimuli)
             elapsed = core.getTime() - spin_start
             self.fixator_stim.ori = (elapsed * 360) % 360
             self.fixator_stim.draw()
             self.win.flip()
 
-        draw_static_shapes(self.preloaded_static_stimuli)
+        draw_static_videos(self.preloaded_video_stimuli)
         self.win.flip()
 
         if self.subjVariables.get('eyetracker') == "yes":
             self.tracker.start_recording()
 
+        box_obj_info = '-'.join([f"{box}_{self.box_object_assignment[box]}" for box in self.box_order])
         self.data_logger.log_trial_event(
             trial_num=self.current_trial,
             phase="gaze_triggered",
             event_type="trial_start",
-            additional_info=f"shape_order={'-'.join(self.shape_order)}"
+            shape="all",
+            position="",
+            additional_info=f"box_order={'-'.join(self.box_order)}, assignments={box_obj_info}"
         )
 
         self.trial_start_time = core.getTime()
@@ -507,9 +584,9 @@ class InfantEyetrackingExperiment:
         initial_selection_timeout = 5 #seconds - max time to wait for first selection
 
         # Setup dictionaries.
-        gaze_histories = {shape: [] for shape in self.shape_order}
-        triggered_flags = {shape: False for shape in self.shape_order}
-        last_triggered = {shape: 0 for shape in self.shape_order}
+        gaze_histories = {box: [] for box in self.box_order}
+        triggered_flags = {box: False for box in self.box_order}
+        last_triggered = {box: 0 for box in self.box_order}
         cooldown = 5.0  # seconds cooldown
 
         active_animation = None    # Currently running animation.
@@ -543,7 +620,9 @@ class InfantEyetrackingExperiment:
             # Update active animation.
             if active_animation is not None:
                 if active_animation.update(current_time):
-                    last_triggered[active_animation.current_shape] = current_time
+                    # Video playback complete, reset to first frame
+                    active_animation.reset_to_first_frame()
+                    last_triggered[active_animation.current_box] = current_time
                     active_animation = None
                     queued_animation = None  # Clear queued candidate when one finishes.
 
@@ -555,16 +634,17 @@ class InfantEyetrackingExperiment:
                     # so we need to log it as an executed (non-queued) selection
                     selection_count += 1
                     last_selection_time = current_time
-                    for other_shape in self.shape_order:
-                        if other_shape != active_animation.current_shape:
-                            last_triggered[other_shape] = 0
+                    for other_box in self.box_order:
+                        if other_box != queued_animation.current_box:
+                            last_triggered[other_box] = 0
 
                     # Log that the queued selection is now being executed
+                    box_obj_name = f"{queued_animation.current_box}_{queued_animation.current_object}"
                     self.data_logger.log_selection(
                         trial_num=self.current_trial,
                         selection_num=selection_count,  # This is the current selection number
-                        shape=queued_animation.current_shape,
-                        position=self.shape_positions[queued_animation.current_shape],
+                        shape=box_obj_name,
+                        position=self.box_positions[queued_animation.current_box],
                         fixation_duration=0,  # We don't know the original fixation duration here
                         queued=False,  # It's no longer queued
                         was_executed=True  # It's being executed now
@@ -574,117 +654,108 @@ class InfantEyetrackingExperiment:
                     queued_animation = None
 
             self.logger.info(gaze_sample)
-            # Process gaze sample for each shape.
-            for shape in self.shape_order:
-                if self.shapeAOIs[shape].contains(gaze_sample):
-                    gaze_histories[shape].append((gaze_sample, current_time))
-                    fixation_duration = self._fixation_duration(gaze_histories[shape])
+            # Process gaze sample for each box.
+            for box in self.box_order:
+                if self.boxAOIs[box].contains(gaze_sample):
+                    gaze_histories[box].append((gaze_sample, current_time))
+                    fixation_duration = self._fixation_duration(gaze_histories[box])
 
                     if fixation_duration >= required_fixation:
 
                         # Immediate trigger only if no animation is active and we haven't reached 4.
                         if active_animation is None and selection_count < 4:
                             # Enforce cooldown.
-                            if current_time - last_triggered[shape] < cooldown:
+                            if current_time - last_triggered[box] < cooldown:
                                 continue
 
                             selection_count += 1
                             last_selection_time = current_time
-                            self.logger.info(f"Shape {shape} triggered via fixation (immediate).")
+                            obj = self.box_object_assignment[box]
+                            self.logger.info(f"Box {box} ({obj}) triggered via fixation (immediate).")
 
                             # Log the selection event
+                            box_obj_name = f"{box}_{obj}"
                             self.data_logger.log_selection(
                                 trial_num=self.current_trial,
                                 selection_num=selection_count,
-                                shape=shape,
-                                position=self.shape_positions[shape],
+                                shape=box_obj_name,
+                                position=self.box_positions[box],
                                 fixation_duration=fixation_duration,
                                 queued=False,
                                 was_executed=True,
                                 selection_time=current_time
                             )
 
-                            active_animation = LoomAnimation(
-                                stim=self.preloaded_static_stimuli[shape],
+                            video = self.preloaded_video_stimuli[box]
+                            active_animation = VideoAnimation(
+                                video=video,
                                 win=self.win,
-                                pos=self.shape_positions[shape],
-                                current_shape=shape,
-                                background_stimuli=self.preloaded_static_stimuli,
-                                init_size=self.init_size,
-                                target_size=450,
-                                init_opacity=self.init_opacity,
-                                target_opacity=1.0,
-                                loom_duration=1.0,
-                                jiggle_duration=0.5,
-                                fade_duration=0.25,
-                                jiggle_amplitude=5,
-                                jiggle_frequency=2,
-                                loom_sound=self.loom_sounds[shape],
-                                selection_sound=self.selection_sounds[shape]
+                                pos=self.box_positions[box],
+                                current_box=box,
+                                current_object=obj,
+                                background_videos=self.preloaded_video_stimuli,
+                                video_duration=1.5,
+                                selection_sound=self.selection_sounds[box]
                             )
+                            active_animation.play(current_time)
 
-                            triggered_flags[shape] = True
-                            gaze_histories[shape] = []
-                            last_triggered[shape] = current_time
-                            for other_shape in self.shape_order:
-                                if other_shape != shape:
-                                    last_triggered[other_shape] = 0  # Reset cooldown for others
+                            triggered_flags[box] = True
+                            gaze_histories[box] = []
+                            last_triggered[box] = current_time
+                            for other_box in self.box_order:
+                                if other_box != box:
+                                    last_triggered[other_box] = 0  # Reset cooldown for others
 
                         # If an animation is active, allow queuing only if selection_count is less than 3.
                         elif active_animation is not None and selection_count < 3:
-                            if queued_animation is None or queued_animation.current_shape != shape:
-                                self.logger.info(f"Shape {shape} queued as next candidate (N+1)")
+                            if queued_animation is None or queued_animation.current_box != box:
+                                obj = self.box_object_assignment[box]
+                                self.logger.info(f"Box {box} ({obj}) queued as next candidate (N+1)")
 
                                 # Log the queued selection - note was_executed=False because it's not shown yet
+                                box_obj_name = f"{box}_{obj}"
                                 self.data_logger.log_selection(
                                     trial_num=self.current_trial,
                                     selection_num=selection_count + 1,  # This will be the next selection number
-                                    shape=shape,
-                                    position=self.shape_positions[shape],
+                                    shape=box_obj_name,
+                                    position=self.box_positions[box],
                                     fixation_duration=fixation_duration,
                                     queued=True,
                                     was_executed=False,  # Not executed yet, just queued
                                     selection_time=current_time
                                 )
 
-                                queued_animation = LoomAnimation(
-                                    stim=self.preloaded_static_stimuli[shape],
+                                video = self.preloaded_video_stimuli[box]
+                                queued_animation = VideoAnimation(
+                                    video=video,
                                     win=self.win,
-                                    pos=self.shape_positions[shape],
-                                    current_shape=shape,
-                                    background_stimuli=self.preloaded_static_stimuli,
-                                    init_size=self.init_size,
-                                    target_size=450,
-                                    init_opacity=self.init_opacity,
-                                    target_opacity=1.0,
-                                    loom_duration=1.0,
-                                    jiggle_duration=0.5,
-                                    fade_duration=0.25,
-                                    jiggle_amplitude=5,
-                                    jiggle_frequency=2,
-                                    loom_sound=self.loom_sounds[shape],
-                                    selection_sound=self.selection_sounds[shape]
+                                    pos=self.box_positions[box],
+                                    current_box=box,
+                                    current_object=obj,
+                                    background_videos=self.preloaded_video_stimuli,
+                                    video_duration=1.5,
+                                    selection_sound=self.selection_sounds[box]
                                 )
-                                triggered_flags[shape] = True
-                                gaze_histories[shape] = []
-                                #last_triggered[shape] = current_time
+                                triggered_flags[box] = True
+                                gaze_histories[box] = []
                 else:
                     # Clear history if gaze is not on the AOI.
-                    gaze_histories[shape] = []
+                    gaze_histories[box] = []
 
             # If nothing is active, refresh the static display.
             if active_animation is None and queued_animation is None:
-                draw_static_shapes(self.preloaded_static_stimuli)
+                draw_static_videos(self.preloaded_video_stimuli)
                 self.win.flip()
 
             # End of trial processes
             # 1. Mark any queued selection that wasn't executed
             if queued_animation is not None:
+                box_obj_name = f"{queued_animation.current_box}_{queued_animation.current_object}"
                 self.data_logger.log_selection(
                     trial_num=self.current_trial,
                     selection_num=selection_count + 1,
-                    shape=queued_animation.current_shape,
-                    position=self.shape_positions[queued_animation.current_shape],
+                    shape=box_obj_name,
+                    position=self.box_positions[queued_animation.current_box],
                     fixation_duration=0,  # Unknown at this point
                     queued=True,
                     was_executed=False
@@ -701,6 +772,19 @@ class InfantEyetrackingExperiment:
         return selection_count
 
     def run_seeded_gt_trial(self):
+        # Reassign objects to boxes for this trial (random sampling without replacement)
+        import random
+        selected_objects = random.sample(self.objects, 4)
+        for i, box in enumerate(self.box_order):
+            self.box_object_assignment[box] = selected_objects[i]
+            # Update preloaded video stimuli
+            if box in self.box_videos and selected_objects[i] in self.box_videos[box]:
+                video = self.box_videos[box][selected_objects[i]]
+                video.pos = self.box_positions[box]
+                video.size = (500, 500)
+                video.stop()
+                video.pause()
+                self.preloaded_video_stimuli[box] = video
 
         # Increment trial counter
         self.current_trial += 1
@@ -713,45 +797,50 @@ class InfantEyetrackingExperiment:
 
         self.logger.info(f"Starting gaze-triggered trial {self.current_trial}")
 
-        # --- Phase 1: Show static shapes with a spinning fixator ---
+        # --- Phase 1: Show static videos (paused on first frame) with a spinning fixator ---
         spin_duration = 1  # second
         spin_start = core.getTime()
         while core.getTime() - spin_start < spin_duration:
-            draw_static_shapes(self.preloaded_static_stimuli)
+            draw_static_videos(self.preloaded_video_stimuli)
             elapsed = core.getTime() - spin_start
             self.fixator_stim.ori = (elapsed * 360) % 360
             self.fixator_stim.draw()
             self.win.flip()
 
-        draw_static_shapes(self.preloaded_static_stimuli)
+        draw_static_videos(self.preloaded_video_stimuli)
         self.win.flip()
 
         if self.subjVariables.get('eyetracker') == "yes":
             self.tracker.start_recording()
 
+        box_obj_info = '-'.join([f"{box}_{self.box_object_assignment[box]}" for box in self.box_order])
         self.data_logger.log_trial_event(
             trial_num=self.current_trial,
             phase="gaze_triggered",
             event_type="trial_start",
-            additional_info=f"shape_order={'-'.join(self.shape_order)}"
+            shape="all",
+            position="",
+            additional_info=f"box_order={'-'.join(self.box_order)}, assignments={box_obj_info}"
         )
 
         self.trial_start_time = core.getTime()
         # Record trial start time
         self.data_logger.trial_start_time = self.trial_start_time
 
-        # Play the first shape automatically (seed shape)
-        first_shape = self.shape_order[0]
-        selection_count = 1  # Start with 1 since we're playing the first shape automatically
+        # Play the first box automatically (seed box)
+        first_box = self.box_order[0]
+        first_obj = self.box_object_assignment[first_box]
+        selection_count = 1  # Start with 1 since we're playing the first box automatically
         current_time = core.getTime()
         last_selection_time = current_time
         
         # Log the automatic first selection
+        box_obj_name = f"{first_box}_{first_obj}"
         self.data_logger.log_selection(
             trial_num=self.current_trial,
             selection_num=selection_count,
-            shape=first_shape,
-            position=self.shape_positions[first_shape],
+            shape=box_obj_name,
+            position=self.box_positions[first_box],
             fixation_duration=0,  # No fixation required for automatic animation
             queued=False,
             was_executed=True,
@@ -759,24 +848,18 @@ class InfantEyetrackingExperiment:
         )
         
         # Create and activate the first animation
-        active_animation = LoomAnimation(
-            stim=self.preloaded_static_stimuli[first_shape],
+        video = self.preloaded_video_stimuli[first_box]
+        active_animation = VideoAnimation(
+            video=video,
             win=self.win,
-            pos=self.shape_positions[first_shape],
-            current_shape=first_shape,
-            background_stimuli=self.preloaded_static_stimuli,
-            init_size=self.init_size,
-            target_size=450,
-            init_opacity=self.init_opacity,
-            target_opacity=1.0,
-            loom_duration=1.0,
-            jiggle_duration=0.5,
-            fade_duration=0.25,
-            jiggle_amplitude=5,
-            jiggle_frequency=2,
-            loom_sound=self.loom_sounds[first_shape],
-            selection_sound=self.selection_sounds[first_shape]
+            pos=self.box_positions[first_box],
+            current_box=first_box,
+            current_object=first_obj,
+            background_videos=self.preloaded_video_stimuli,
+            video_duration=1.5,
+            selection_sound=self.selection_sounds[first_box]
         )
+        active_animation.play(current_time)
         
         # Set up for the rest of the trial
         queued_animation = None    # Candidate for the next animation
@@ -786,10 +869,10 @@ class InfantEyetrackingExperiment:
         initial_selection_timeout = 5  # seconds - max time to wait for first infant selection
 
         # Setup dictionaries
-        gaze_histories = {shape: [] for shape in self.shape_order}
-        triggered_flags = {shape: False for shape in self.shape_order}
-        last_triggered = {shape: 0 for shape in self.shape_order}
-        last_triggered[first_shape] = current_time  # Set the first shape as already triggered
+        gaze_histories = {box: [] for box in self.box_order}
+        triggered_flags = {box: False for box in self.box_order}
+        last_triggered = {box: 0 for box in self.box_order}
+        last_triggered[first_box] = current_time  # Set the first box as already triggered
         cooldown = 5.0  # seconds cooldown
 
         # Main loop: run until max_trial_time OR we've reached 4 selections and no animation is active
@@ -821,7 +904,9 @@ class InfantEyetrackingExperiment:
             # Update active animation
             if active_animation is not None:
                 if active_animation.update(current_time):
-                    last_triggered[active_animation.current_shape] = current_time
+                    # Video playback complete, reset to first frame
+                    active_animation.reset_to_first_frame()
+                    last_triggered[active_animation.current_box] = current_time
                     active_animation = None
                     queued_animation = None  # Clear queued candidate when one finishes
 
@@ -833,16 +918,17 @@ class InfantEyetrackingExperiment:
                     # so we need to log it as an executed (non-queued) selection
                     selection_count += 1
                     last_selection_time = current_time
-                    for other_shape in self.shape_order:
-                        if other_shape != queued_animation.current_shape:
-                            last_triggered[other_shape] = 0
+                    for other_box in self.box_order:
+                        if other_box != queued_animation.current_box:
+                            last_triggered[other_box] = 0
 
                     # Log that the queued selection is now being executed
+                    box_obj_name = f"{queued_animation.current_box}_{queued_animation.current_object}"
                     self.data_logger.log_selection(
                         trial_num=self.current_trial,
                         selection_num=selection_count,  # This is the current selection number
-                        shape=queued_animation.current_shape,
-                        position=self.shape_positions[queued_animation.current_shape],
+                        shape=box_obj_name,
+                        position=self.box_positions[queued_animation.current_box],
                         fixation_duration=0,  # We don't know the original fixation duration here
                         queued=False,  # It's no longer queued
                         was_executed=True,  # It's being executed now
@@ -853,117 +939,108 @@ class InfantEyetrackingExperiment:
                     queued_animation = None
 
             self.logger.info(gaze_sample)
-            # Process gaze sample for each shape
-            for shape in self.shape_order:
-                if self.shapeAOIs[shape].contains(gaze_sample):
-                    gaze_histories[shape].append((gaze_sample, current_time))
-                    fixation_duration = self._fixation_duration(gaze_histories[shape])
+            # Process gaze sample for each box
+            for box in self.box_order:
+                if self.boxAOIs[box].contains(gaze_sample):
+                    gaze_histories[box].append((gaze_sample, current_time))
+                    fixation_duration = self._fixation_duration(gaze_histories[box])
 
                     if fixation_duration >= required_fixation:
 
                         # Immediate trigger only if no animation is active and we haven't reached 4
                         if active_animation is None and selection_count < 4:
                             # Enforce cooldown
-                            if current_time - last_triggered[shape] < cooldown:
+                            if current_time - last_triggered[box] < cooldown:
                                 continue
 
                             selection_count += 1
                             last_selection_time = current_time
-                            self.logger.info(f"Shape {shape} triggered via fixation (immediate).")
+                            obj = self.box_object_assignment[box]
+                            self.logger.info(f"Box {box} ({obj}) triggered via fixation (immediate).")
 
                             # Log the selection event
+                            box_obj_name = f"{box}_{obj}"
                             self.data_logger.log_selection(
                                 trial_num=self.current_trial,
                                 selection_num=selection_count,
-                                shape=shape,
-                                position=self.shape_positions[shape],
+                                shape=box_obj_name,
+                                position=self.box_positions[box],
                                 fixation_duration=fixation_duration,
                                 queued=False,
                                 was_executed=True,
                                 selection_time=current_time
                             )
 
-                            active_animation = LoomAnimation(
-                                stim=self.preloaded_static_stimuli[shape],
+                            video = self.preloaded_video_stimuli[box]
+                            active_animation = VideoAnimation(
+                                video=video,
                                 win=self.win,
-                                pos=self.shape_positions[shape],
-                                current_shape=shape,
-                                background_stimuli=self.preloaded_static_stimuli,
-                                init_size=self.init_size,
-                                target_size=450,
-                                init_opacity=self.init_opacity,
-                                target_opacity=1.0,
-                                loom_duration=1.0,
-                                jiggle_duration=0.5,
-                                fade_duration=0.25,
-                                jiggle_amplitude=5,
-                                jiggle_frequency=2,
-                                loom_sound=self.loom_sounds[shape],
-                                selection_sound=self.selection_sounds[shape]
+                                pos=self.box_positions[box],
+                                current_box=box,
+                                current_object=obj,
+                                background_videos=self.preloaded_video_stimuli,
+                                video_duration=1.5,
+                                selection_sound=self.selection_sounds[box]
                             )
+                            active_animation.play(current_time)
 
-                            triggered_flags[shape] = True
-                            gaze_histories[shape] = []
-                            last_triggered[shape] = current_time
-                            for other_shape in self.shape_order:
-                                if other_shape != shape:
-                                    last_triggered[other_shape] = 0  # Reset cooldown for others
+                            triggered_flags[box] = True
+                            gaze_histories[box] = []
+                            last_triggered[box] = current_time
+                            for other_box in self.box_order:
+                                if other_box != box:
+                                    last_triggered[other_box] = 0  # Reset cooldown for others
 
                         # If an animation is active, allow queuing only if selection_count is less than 3
                         elif active_animation is not None and selection_count < 3:
-                            if queued_animation is None or queued_animation.current_shape != shape:
-                                self.logger.info(f"Shape {shape} queued as next candidate (N+1)")
+                            if queued_animation is None or queued_animation.current_box != box:
+                                obj = self.box_object_assignment[box]
+                                self.logger.info(f"Box {box} ({obj}) queued as next candidate (N+1)")
 
                                 # Log the queued selection - note was_executed=False because it's not shown yet
+                                box_obj_name = f"{box}_{obj}"
                                 self.data_logger.log_selection(
                                     trial_num=self.current_trial,
                                     selection_num=selection_count + 1,  # This will be the next selection number
-                                    shape=shape,
-                                    position=self.shape_positions[shape],
+                                    shape=box_obj_name,
+                                    position=self.box_positions[box],
                                     fixation_duration=fixation_duration,
                                     queued=True,
                                     was_executed=False,  # Not executed yet, just queued
                                     selection_time=current_time
                                 )
 
-                                queued_animation = LoomAnimation(
-                                    stim=self.preloaded_static_stimuli[shape],
+                                video = self.preloaded_video_stimuli[box]
+                                queued_animation = VideoAnimation(
+                                    video=video,
                                     win=self.win,
-                                    pos=self.shape_positions[shape],
-                                    current_shape=shape,
-                                    background_stimuli=self.preloaded_static_stimuli,
-                                    init_size=self.init_size,
-                                    target_size=450,
-                                    init_opacity=self.init_opacity,
-                                    target_opacity=1.0,
-                                    loom_duration=1.0,
-                                    jiggle_duration=0.5,
-                                    fade_duration=0.25,
-                                    jiggle_amplitude=5,
-                                    jiggle_frequency=2,
-                                    loom_sound=self.loom_sounds[shape],
-                                    selection_sound=self.selection_sounds[shape]
+                                    pos=self.box_positions[box],
+                                    current_box=box,
+                                    current_object=obj,
+                                    background_videos=self.preloaded_video_stimuli,
+                                    video_duration=1.5,
+                                    selection_sound=self.selection_sounds[box]
                                 )
-                                triggered_flags[shape] = True
-                                gaze_histories[shape] = []
-                                #last_triggered[shape] = current_time
+                                triggered_flags[box] = True
+                                gaze_histories[box] = []
                 else:
                     # Clear history if gaze is not on the AOI
-                    gaze_histories[shape] = []
+                    gaze_histories[box] = []
 
             # If nothing is active, refresh the static display
             if active_animation is None and queued_animation is None:
-                draw_static_shapes(self.preloaded_static_stimuli)
+                draw_static_videos(self.preloaded_video_stimuli)
                 self.win.flip()
 
             # End of trial processes
             # 1. Mark any queued selection that wasn't executed
             if queued_animation is not None:
+                box_obj_name = f"{queued_animation.current_box}_{queued_animation.current_object}"
                 self.data_logger.log_selection(
                     trial_num=self.current_trial,
                     selection_num=selection_count + 1,
-                    shape=queued_animation.current_shape,
-                    position=self.shape_positions[queued_animation.current_shape],
+                    shape=box_obj_name,
+                    position=self.box_positions[queued_animation.current_box],
                     fixation_duration=0,  # Unknown at this point
                     queued=True,
                     was_executed=False
