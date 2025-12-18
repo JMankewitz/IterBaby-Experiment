@@ -7,7 +7,7 @@ from utils import *
 from data_logger import *
 import tobii_research as tr
 from psychopy.hardware import keyboard
-from psychopy import core, visual, event, libtime
+from psychopy import core, visual, event
 
 import constants
 
@@ -93,7 +93,7 @@ class InfantEyetrackingExperiment:
         self.current_ag_index = 0  # Keep track of which AG video to play next
 
         # Box and object definitions
-        self.box_types = ["cross", "stripes", "dots", "grid"]  # 4 box styles
+        self.box_types = ["cross", "stripes", "dot", "grid"]  # 4 box styles
         self.objects = ["ball", "cat", "cookie", "cupcake", "dog", "truck"]  # 6 objects
 
         # Pre-experiment setup: subject info entry and data file initialization.
@@ -334,12 +334,12 @@ class InfantEyetrackingExperiment:
         self.box_positions = {
             "cross": self.pos["topLeft"],
             "stripes": self.pos["bottomLeft"],
-            "dots": self.pos["topRight"],
+            "dot": self.pos["topRight"],
             "grid": self.pos["bottomRight"]
         }
         
         # Box order for training phase playback
-        self.box_order = ["cross", "stripes", "dots", "grid"]  # TopLeft, BottomLeft, TopRight, BottomRight
+        self.box_order = ["cross", "stripes", "dot", "grid"]  # TopLeft, BottomLeft, TopRight, BottomRight
 
         # Randomly sample 4 objects from 6 without replacement
         import random
