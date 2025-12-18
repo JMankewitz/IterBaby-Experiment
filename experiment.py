@@ -104,8 +104,8 @@ class InfantEyetrackingExperiment:
         self.setup_display()
         self.setup_exp_paths()
         self.setup_input_devices()
-        self.setup_stimuli_assignment()
         self.load_stimuli()
+        self.setup_stimuli_assignment()
         self.display_start_screen()
 
         self.logger.info("Experiment initialized with configuration.")
@@ -360,8 +360,8 @@ class InfantEyetrackingExperiment:
                 video = self.box_videos[box][obj]
                 video.pos = self.box_positions[box]
                 video.size = (500, 500)  # Set appropriate size
-                # Seek to first frame and pause
-                video.seek(0)
+                # Stop and pause video (will show first frame when paused)
+                video.stop()
                 video.pause()
                 self.preloaded_video_stimuli[box] = video
             else:

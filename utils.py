@@ -482,7 +482,7 @@ class VideoAnimation:
     video_duration : float
         Duration of the video playback in seconds (default: 1.5)
     selection_sound : psychopy.sound.Sound
-        Sound to play when video starts playing (default: None)
+        Sound to play when video starts playing  (default: None)
     """
     # Define explicit states
     PAUSED_FIRST = "paused_first"
