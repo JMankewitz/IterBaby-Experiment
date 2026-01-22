@@ -3,7 +3,7 @@ import os
 #import pyo as pyo
 from psychopy import prefs
 
-#prefs.hardware['audioLib'] = ['ptb']
+prefs.hardware['audioLib'] = ['ptb', 'pyo']
 
 from psychopy import sound, core, visual
 import math
