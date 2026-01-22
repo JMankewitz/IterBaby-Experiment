@@ -1,6 +1,6 @@
 import logging
 import os
-import pyo as pyo
+#import pyo as pyo
 from psychopy import prefs
 
 prefs.hardware['audioLib'] = ['ptb', 'pyo']
@@ -463,7 +463,7 @@ class LoomAnimation:
 class VideoAnimation:
     """
     Animation class that handles video playback for box reveal animations.
-    Videos show a box that raises (.5s), displays an object (.5s), and closes (.5s) = 1.5s total.
+    Videos play to completion and then pause on the last frame.
 
     Parameters:
     -----------
@@ -480,9 +480,12 @@ class VideoAnimation:
     background_videos : dict
         Dictionary of {box_name: video_stim} for all background boxes
     video_duration : float
-        Duration of the video playback in seconds (default: 1.5)
+        Maximum duration fallback in seconds (default: 1.5). Videos play to completion
+        naturally, but this provides a safety timeout if needed.
     selection_sound : psychopy.sound.Sound
         Sound to play when video starts playing  (default: None)
+    loom_sound : psychopy.sound.Sound
+        Sound to play when video starts (looming phase) (default: None)
     """
     # Define explicit states
     PAUSED_FIRST = "paused_first"
@@ -491,7 +494,7 @@ class VideoAnimation:
     COMPLETE = "complete"
 
     def __init__(self, video, win, pos, current_box, current_object, background_videos,
-                 video_duration=1.5, selection_sound=None):
+                 video_duration=1.5, selection_sound=None, loom_sound=None):
         self.video = video
         self.win = win
         self.pos = pos
@@ -501,6 +504,8 @@ class VideoAnimation:
         self.video_duration = video_duration
         self.selection_sound = selection_sound
         self.selection_sound_played = False
+        self.loom_sound = loom_sound
+        self.loom_sound_played = False
 
         # Set video properties
         self.video.pos = pos
@@ -511,6 +516,7 @@ class VideoAnimation:
         from psychopy import core
         self.start_time = core.getTime()
         self.state = self.PAUSED_FIRST
+        self.video_started = False
         
         # Stop and reset video to beginning, then pause
         self.video.stop()
@@ -542,14 +548,21 @@ class VideoAnimation:
 
         # Stop and restart video from beginning
         self.video.stop()
+        # Ensure video is set to not loop
+        self.video.loop = False
+        # Start playing the video
         self.video.play()
         self.start_time = current_time
         self.state = self.PLAYING
+        # Track that we've started playing
+        self.video_started = True
         
-        # Play selection sound when video starts
-        if self.selection_sound is not None and not self.selection_sound_played:
-            self.selection_sound.play()
-            self.selection_sound_played = True
+        # Play loom sound when video starts (looming phase)
+        if self.loom_sound is not None and not self.loom_sound_played:
+            self.loom_sound.play()
+            self.loom_sound_played = True
+        
+        # Selection sound removed - only using loom sound
 
     def update(self, current_time=None):
         """
@@ -566,22 +579,44 @@ class VideoAnimation:
             True if the video playback is complete, False otherwise
         """
         from psychopy import core
+        import logging
+        logger = logging.getLogger(__name__)
+        
         if current_time is None:
             current_time = core.getTime()
 
         if self.state == self.PLAYING:
+            # Calculate elapsed time since video started
             elapsed = current_time - self.start_time
-            if elapsed >= self.video_duration:
-                # Video playback complete, pause on current frame
+            
+            # CRITICAL: Videos must be drawn every frame to continue playing
+            # Draw the video first to keep it playing
+            self.draw()
+            
+            # Use the actual video duration instead of relying on isFinished
+            # isFinished can be unreliable in PsychoPy, especially with certain video backends
+            try:
+                video_duration = self.video.duration
+                if video_duration is None or video_duration <= 0:
+                    video_duration = 1.5  # Default fallback for ~1.5 second videos
+            except Exception:
+                video_duration = 1.5  # Fallback if duration not available
+            
+            # Only finish when we've played the full video duration (plus a small buffer)
+            if elapsed >= video_duration:
+                logger.info(f"Video {self.current_box} completed: elapsed={elapsed:.2f}s, duration={video_duration:.2f}s")
+                # Video has played for its full duration
+                # Pause on last frame to keep it displayed
                 self.video.pause()
                 self.state = self.PAUSED_LAST
+                # Draw one final time to show the last frame
+                self.draw()
                 return True
-            elif self.video.isFinished:
-                # Video naturally finished
-                self.video.pause()
-                self.state = self.PAUSED_LAST
-                return True
+            
+            # Video is still playing - return False to continue
+            return False
 
+        # If not in PLAYING state, still draw (might be paused on first frame)
         self.draw()
         return False
 
@@ -605,5 +640,6 @@ class VideoAnimation:
     def reset_to_first_frame(self):
         """Reset video to first frame and pause"""
         self.seek_to_first_frame()
-        # Reset sound flag so it can play again next time
+        # Reset sound flags so they can play again next time
         self.selection_sound_played = False
+        self.loom_sound_played = False
