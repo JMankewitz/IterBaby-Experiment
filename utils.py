@@ -216,12 +216,11 @@ def draw_static_shapes(preloaded_stimuli):
 
 def draw_static_videos(preloaded_videos):
     """
-    Draws preloaded video stimuli paused on first frame.
+    Draws preloaded video stimuli.
+    Videos should already be paused on either first or last frame.
+    This function only draws them without modifying playback state.
     """
     for video in preloaded_videos.values():
-        # Ensure video is paused (will show current frame)
-        if not video.isFinished:
-            video.pause()
         video.draw()
 
 
@@ -463,7 +462,12 @@ class LoomAnimation:
 class VideoAnimation:
     """
     Animation class that handles video playback for box reveal animations.
-    Videos play to completion and then pause on the last frame.
+    Uses time-based completion detection for reliability (PsychoPy's isFinished 
+    can be unreliable depending on video backend).
+
+    This class follows the same reliable state-machine pattern as LoomAnimation,
+    using elapsed time to determine when playback is complete rather than relying
+    on PsychoPy's built-in detection.
 
     Parameters:
     -----------
@@ -480,17 +484,17 @@ class VideoAnimation:
     background_videos : dict
         Dictionary of {box_name: video_stim} for all background boxes
     video_duration : float
-        Maximum duration fallback in seconds (default: 1.5). Videos play to completion
-        naturally, but this provides a safety timeout if needed.
+        Expected video duration in seconds (default: 1.5). This is used as the
+        primary completion detection method. If possible, the actual video duration
+        is read from the video file.
     selection_sound : psychopy.sound.Sound
-        Sound to play when video starts playing  (default: None)
+        Sound to play when video starts playing (default: None)
     loom_sound : psychopy.sound.Sound
         Sound to play when video starts (looming phase) (default: None)
     """
-    # Define explicit states
-    PAUSED_FIRST = "paused_first"
+    # Define explicit states (matching LoomAnimation pattern)
+    IDLE = "idle"
     PLAYING = "playing"
-    PAUSED_LAST = "paused_last"
     COMPLETE = "complete"
 
     def __init__(self, video, win, pos, current_box, current_object, background_videos,
@@ -501,7 +505,7 @@ class VideoAnimation:
         self.current_box = current_box
         self.current_object = current_object
         self.background_videos = background_videos
-        self.video_duration = video_duration
+        self.fallback_duration = video_duration
         self.selection_sound = selection_sound
         self.selection_sound_played = False
         self.loom_sound = loom_sound
@@ -514,19 +518,48 @@ class VideoAnimation:
 
         # Animation state
         from psychopy import core
-        self.start_time = core.getTime()
-        self.state = self.PAUSED_FIRST
-        self.video_started = False
+        self.start_time = None
+        self.state = self.IDLE
         
-        # Stop and reset video to beginning, then pause
-        self.video.stop()
-        self.video.pause()
+        # Determine the actual video duration (with fallback)
+        self._actual_duration = self._get_video_duration()
+        
+        # Reset video to first frame
+        self._reset_video_to_start()
 
-    def seek_to_first_frame(self):
-        """Reset video to first frame and pause"""
-        self.video.stop()
-        self.video.pause()
-        self.state = self.PAUSED_FIRST
+    def _get_video_duration(self):
+        """
+        Get the actual video duration, with fallback to configured duration.
+        
+        Returns:
+        --------
+        float
+            Video duration in seconds
+        """
+        try:
+            # Try to get duration from video file
+            duration = self.video.duration
+            if duration is not None and duration > 0:
+                return duration
+        except Exception:
+            pass
+        
+        # Fallback to configured duration
+        return self.fallback_duration
+    
+    def _reset_video_to_start(self):
+        """Reset video to beginning and pause on first frame"""
+        try:
+            self.video.stop()
+            # Seek to beginning if available
+            try:
+                self.video.seek(0)
+            except Exception:
+                pass  # Some backends may not support seek
+            self.video.pause()
+        except Exception as e:
+            import logging
+            logging.getLogger(__name__).warning(f"Error resetting video: {e}")
 
     def play(self, current_time=None):
         """
@@ -536,37 +569,33 @@ class VideoAnimation:
         -----------
         current_time : float, optional
             Current time in seconds. If None, gets current time.
-
-        Returns:
-        --------
-        bool
-            True if the video is complete, False otherwise
         """
         from psychopy import core
         if current_time is None:
             current_time = core.getTime()
 
-        # Stop and restart video from beginning
-        self.video.stop()
+        # Reset video to beginning
+        self._reset_video_to_start()
+        
         # Ensure video is set to not loop
         self.video.loop = False
+        
         # Start playing the video
         self.video.play()
         self.start_time = current_time
         self.state = self.PLAYING
-        # Track that we've started playing
-        self.video_started = True
         
-        # Play loom sound when video starts (looming phase)
+        # Play loom sound when video starts
         if self.loom_sound is not None and not self.loom_sound_played:
             self.loom_sound.play()
             self.loom_sound_played = True
-        
-        # Selection sound removed - only using loom sound
 
     def update(self, current_time=None):
         """
-        Update the video playback state.
+        Update the video playback state based on elapsed time.
+        
+        This method uses time-based completion detection rather than relying on
+        PsychoPy's isFinished property, which can be unreliable.
 
         Parameters:
         -----------
@@ -579,8 +608,6 @@ class VideoAnimation:
             True if the video playback is complete, False otherwise
         """
         from psychopy import core
-        import logging
-        logger = logging.getLogger(__name__)
         
         if current_time is None:
             current_time = core.getTime()
@@ -589,57 +616,68 @@ class VideoAnimation:
             # Calculate elapsed time since video started
             elapsed = current_time - self.start_time
             
-            # CRITICAL: Videos must be drawn every frame to continue playing
-            # Draw the video first to keep it playing
+            # CRITICAL: Draw video every frame to keep it playing
             self.draw()
             
-            # Use the actual video duration instead of relying on isFinished
-            # isFinished can be unreliable in PsychoPy, especially with certain video backends
-            try:
-                video_duration = self.video.duration
-                if video_duration is None or video_duration <= 0:
-                    video_duration = 1.5  # Default fallback for ~1.5 second videos
-            except Exception:
-                video_duration = 1.5  # Fallback if duration not available
-            
-            # Only finish when we've played the full video duration (plus a small buffer)
-            if elapsed >= video_duration:
-                logger.info(f"Video {self.current_box} completed: elapsed={elapsed:.2f}s, duration={video_duration:.2f}s")
-                # Video has played for its full duration
-                # Pause on last frame to keep it displayed
-                self.video.pause()
-                self.state = self.PAUSED_LAST
-                # Draw one final time to show the last frame
-                self.draw()
+            # Time-based completion detection (more reliable than isFinished)
+            # Add a small buffer (0.05s) to ensure video fully completes
+            if elapsed >= (self._actual_duration - 0.05):
+                # Video should be complete by now
+                self.video.pause()  # Pause on last frame
+                self.state = self.COMPLETE
                 return True
             
-            # Video is still playing - return False to continue
+            # Video is still playing
             return False
-
-        # If not in PLAYING state, still draw (might be paused on first frame)
-        self.draw()
-        return False
+        
+        elif self.state == self.COMPLETE:
+            # Already complete, just draw the paused frame
+            self.draw()
+            return True
+        
+        else:  # IDLE state
+            # Draw paused first frame
+            self.draw()
+            return False
 
     def draw(self):
         """Draw the current video frame and background videos to the window"""
-        # Draw the background videos if available
+        # Draw the background videos first
         if self.background_videos:
             for box_name, bg_video in self.background_videos.items():
                 if box_name != self.current_box:
-                    # Draw background videos paused on first frame
                     bg_video.draw()
 
-        # Draw the current video
+        # Draw the current video on top
         self.video.draw()
         self.win.flip()
 
     def is_complete(self):
         """Check if video playback is complete"""
-        return self.state == self.PAUSED_LAST
+        return self.state == self.COMPLETE
 
     def reset_to_first_frame(self):
-        """Reset video to first frame and pause"""
-        self.seek_to_first_frame()
+        """Reset video to first frame and prepare for next playback"""
+        self._reset_video_to_start()
+        self.state = self.IDLE
+        self.start_time = None
         # Reset sound flags so they can play again next time
         self.selection_sound_played = False
         self.loom_sound_played = False
+    
+    def run_to_completion(self):
+        """
+        Run the full video from start to finish without requiring manual updates.
+        This mirrors LoomAnimation.run_to_completion() for consistency.
+        """
+        from psychopy import core
+        
+        # Start playing
+        self.play()
+        
+        # Keep updating until complete
+        while not self.update():
+            pass
+        
+        # Ensure we're complete
+        self.state = self.COMPLETE

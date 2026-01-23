@@ -511,7 +511,7 @@ class InfantEyetrackingExperiment:
         self.win.flip()
 
         # --- Phase 2: Play each video in order (TopLeft, BottomLeft, TopRight, BottomRight) ---
-        # Each video plays to completion, then pauses on the last frame
+        # Each video plays to completion using time-based detection, then pauses on the last frame
         for box_index, box in enumerate(self.box_order):
             obj = self.box_object_assignment[box]
             self.logger.info(f"Playing video: {box}_{obj}")
@@ -526,27 +526,21 @@ class InfantEyetrackingExperiment:
 
             video = self.preloaded_video_stimuli[box]
             
-            # Stop and restart video from beginning, then play
-            video.stop()
-            video.play()
+            # Create a VideoAnimation to handle playback reliably
+            video_animation = VideoAnimation(
+                video=video,
+                win=self.win,
+                pos=self.box_positions[box],
+                current_box=box,
+                current_object=obj,
+                background_videos=self.preloaded_video_stimuli,
+                video_duration=1.5,  # Expected video duration
+                selection_sound=self.selection_sounds.get(box),
+                loom_sound=self.loom_sounds.get(box)
+            )
             
-            # Play loom sound when video starts
-            if box in self.loom_sounds:
-                self.loom_sounds[box].play()
-            
-            # Play video until it finishes completely
-            while not video.isFinished:
-                # Draw all videos (background ones paused, this one playing)
-                for bg_box, bg_video in self.preloaded_video_stimuli.items():
-                    if bg_box != box:
-                        bg_video.draw()
-                video.draw()
-                self.win.flip()
-            
-            # Video has finished - pause on the last frame
-            # Note: When isFinished is True, the video is already on the last frame
-            # We pause it to keep it displayed
-            video.pause()
+            # Play video to completion using time-based detection
+            video_animation.run_to_completion()
             
             current_time = core.getTime()
 
@@ -667,6 +661,7 @@ class InfantEyetrackingExperiment:
 
         active_animation = None    # Currently running animation.
         queued_animation = None    # Candidate for the next animation.
+        last_completed_box = None  # Track which box just finished (to keep on last frame)
 
         # Main loop: run until max_trial_time OR we've reached 4 selections and no animation is active.
         while (core.getTime() - self.trial_start_time) < max_trial_time:
@@ -693,48 +688,74 @@ class InfantEyetrackingExperiment:
             else:
                 gaze_sample = None
 
-            # Update active animation.
+            # Update active animation (only once per frame)
+            animation_just_completed = False
             if active_animation is not None:
                 if active_animation.update(current_time):
-                    # Video playback complete, reset to first frame
-                    self.logger.info(f"Active animation {active_animation.current_box} completed, setting to None")
-                    active_animation.reset_to_first_frame()
+                    # Video playback complete - DON'T reset yet, keep on last frame
+                    self.logger.info(f"Active animation {active_animation.current_box} completed")
                     last_triggered[active_animation.current_box] = current_time
+                    last_completed_box = active_animation.current_box
                     active_animation = None
-                    # NOTE: Don't clear queued_animation here - it should be promoted next!
+                    animation_just_completed = True
+                    # NOTE: Don't reset video here - it stays paused on last frame
+                    # It will be reset when a new animation starts for that box
 
-            # Promote queued animation if no animation is active:
+            # Promote queued animation if no animation is active
             if active_animation is None and queued_animation is not None:
-                self.logger.info(f"Promoting queued animation {queued_animation.current_box} to active")
+                queued_box = queued_animation['box']
+                queued_obj = queued_animation['obj']
+                self.logger.info(f"Promoting queued animation {queued_box} to active")
+                
                 # Only promote if we haven't reached 4 selections
                 if selection_count < 4:
-                    # At this point, the queued animation is being activated,
-                    # so we need to log it as an executed (non-queued) selection
+                    # Reset the previously completed video to first frame (if any)
+                    if last_completed_box is not None and last_completed_box != queued_box:
+                        self.preloaded_video_stimuli[last_completed_box].stop()
+                        try:
+                            self.preloaded_video_stimuli[last_completed_box].seek(0)
+                        except Exception:
+                            pass
+                        self.preloaded_video_stimuli[last_completed_box].pause()
+                    
                     selection_count += 1
                     last_selection_time = current_time
                     for other_box in self.box_order:
-                        if other_box != queued_animation.current_box:
+                        if other_box != queued_box:
                             last_triggered[other_box] = 0
 
                     # Log that the queued selection is now being executed
-                    box_obj_name = f"{queued_animation.current_box}_{queued_animation.current_object}"
+                    box_obj_name = f"{queued_box}_{queued_obj}"
                     self.data_logger.log_selection(
                         trial_num=self.current_trial,
-                        selection_num=selection_count,  # This is the current selection number
+                        selection_num=selection_count,
                         shape=box_obj_name,
-                        position=self.box_positions[queued_animation.current_box],
-                        fixation_duration=0,  # We don't know the original fixation duration here
-                        queued=False,  # It's no longer queued
-                        was_executed=True,  # It's being executed now
+                        position=self.box_positions[queued_box],
+                        fixation_duration=0,
+                        queued=False,
+                        was_executed=True,
                         selection_time=current_time
                     )
 
-                    # Promote queued animation to active and start playing it
-                    active_animation = queued_animation
-                    active_animation.play(current_time)  # Actually start the video!
+                    # NOW create the VideoAnimation and start playing
+                    video = self.preloaded_video_stimuli[queued_box]
+                    active_animation = VideoAnimation(
+                        video=video,
+                        win=self.win,
+                        pos=self.box_positions[queued_box],
+                        current_box=queued_box,
+                        current_object=queued_obj,
+                        background_videos=self.preloaded_video_stimuli,
+                        video_duration=1.5,
+                        selection_sound=self.selection_sounds[queued_box],
+                        loom_sound=self.loom_sounds[queued_box]
+                    )
+                    active_animation.play(current_time)
                     queued_animation = None
+                    last_completed_box = None  # Clear since we're starting a new one
+                else:
+                    queued_animation = None  # Clear queued if we've reached 4
 
-            self.logger.info(gaze_sample)
             # Process gaze sample for each box (only if we have a valid gaze sample)
             if gaze_sample is not None:
                 for box in self.box_order:
@@ -745,11 +766,20 @@ class InfantEyetrackingExperiment:
 
                         if fixation_duration >= required_fixation:
 
-                            # Immediate trigger only if no animation is active and we haven't reached 4.
+                            # Immediate trigger only if no animation is active and we haven't reached 4
                             if active_animation is None and selection_count < 4:
-                                # Enforce cooldown.
+                                # Enforce cooldown
                                 if current_time - last_triggered[box] < cooldown:
                                     continue
+
+                                # Reset any previously completed video to first frame
+                                if last_completed_box is not None and last_completed_box != box:
+                                    self.preloaded_video_stimuli[last_completed_box].stop()
+                                    try:
+                                        self.preloaded_video_stimuli[last_completed_box].seek(0)
+                                    except Exception:
+                                        pass
+                                    self.preloaded_video_stimuli[last_completed_box].pause()
 
                                 selection_count += 1
                                 last_selection_time = current_time
@@ -782,58 +812,50 @@ class InfantEyetrackingExperiment:
                                     loom_sound=self.loom_sounds[box]
                                 )
                                 active_animation.play(current_time)
+                                last_completed_box = None  # Clear since we're starting a new one
 
                                 triggered_flags[box] = True
                                 gaze_histories[box] = []
                                 last_triggered[box] = current_time
                                 for other_box in self.box_order:
                                     if other_box != box:
-                                        last_triggered[other_box] = 0  # Reset cooldown for others
+                                        last_triggered[other_box] = 0
 
-                            # If an animation is active, allow queuing only if selection_count is less than 3.
+                            # If an animation is active, allow queuing only if selection_count is less than 3
                             elif active_animation is not None and selection_count < 3:
                                 if queued_animation is None or queued_animation.current_box != box:
                                     obj = self.box_object_assignment[box]
                                     self.logger.info(f"Box {box} ({obj}) queued as next candidate (N+1)")
 
-                                    # Log the queued selection - note was_executed=False because it's not shown yet
+                                    # Log the queued selection
                                     box_obj_name = f"{box}_{obj}"
                                     self.data_logger.log_selection(
                                         trial_num=self.current_trial,
-                                        selection_num=selection_count + 1,  # This will be the next selection number
+                                        selection_num=selection_count + 1,
                                         shape=box_obj_name,
                                         position=self.box_positions[box],
                                         fixation_duration=fixation_duration,
                                         queued=True,
-                                        was_executed=False,  # Not executed yet, just queued
+                                        was_executed=False,
                                         selection_time=current_time
                                     )
 
-                                    video = self.preloaded_video_stimuli[box]
-                                    queued_animation = VideoAnimation(
-                                        video=video,
-                                        win=self.win,
-                                        pos=self.box_positions[box],
-                                        current_box=box,
-                                        current_object=obj,
-                                        background_videos=self.preloaded_video_stimuli,
-                                        video_duration=1.5,
-                                        selection_sound=self.selection_sounds[box],
-                                        loom_sound=self.loom_sounds[box]
-                                    )
+                                    # Store queued box info WITHOUT creating VideoAnimation yet
+                                    # (to avoid interfering with the currently playing video)
+                                    queued_animation = {
+                                        'box': box,
+                                        'obj': obj,
+                                        'fixation_duration': fixation_duration
+                                    }
                                     triggered_flags[box] = True
                                     gaze_histories[box] = []
                     else:
                         # Gaze is NOT on this box - clear its history
                         gaze_histories[box] = []
 
-            # Always ensure something is drawn every frame
-            if active_animation is not None:
-                # Animation is active - update it again to ensure continuous drawing
-                # This is critical: videos must be drawn every frame to play properly
-                active_animation.update(current_time)
-            else:
-                # No animation active - draw static display
+            # Draw frame (only once per loop iteration)
+            # Skip if we already drew during animation update
+            if active_animation is None and not animation_just_completed:
                 draw_static_videos(self.preloaded_video_stimuli)
                 self.win.flip()
 
@@ -842,21 +864,33 @@ class InfantEyetrackingExperiment:
         # End of trial processes
         # 1. Mark any queued selection that wasn't executed
         if queued_animation is not None:
-            box_obj_name = f"{queued_animation.current_box}_{queued_animation.current_object}"
+            queued_box = queued_animation['box']
+            queued_obj = queued_animation['obj']
+            box_obj_name = f"{queued_box}_{queued_obj}"
             self.data_logger.log_selection(
                 trial_num=self.current_trial,
                 selection_num=selection_count + 1,
                 shape=box_obj_name,
-                position=self.box_positions[queued_animation.current_box],
-                fixation_duration=0,  # Unknown at this point
+                position=self.box_positions[queued_box],
+                fixation_duration=0,
                 queued=True,
                 was_executed=False
             )
 
-        # 2. Record trial summary
+        # 2. Reset all videos to first frame for next trial
+        for box in self.box_order:
+            video = self.preloaded_video_stimuli[box]
+            video.stop()
+            try:
+                video.seek(0)
+            except Exception:
+                pass
+            video.pause()
+
+        # 3. Record trial summary
         self.data_logger.end_trial(self.current_trial)
 
-        # 3. Stop eyetracker recording
+        # 4. Stop eyetracker recording
         if self.subjVariables.get('eyetracker') == "yes":
             self.tracker.stop_recording()
 
@@ -968,7 +1002,8 @@ class InfantEyetrackingExperiment:
         active_animation.play(current_time)
         
         # Set up for the rest of the trial
-        queued_animation = None    # Candidate for the next animation
+        queued_animation = None    # Candidate for the next animation (stored as dict)
+        last_completed_box = None  # Track which box just finished (to keep on last frame)
         max_trial_time = 20  # seconds
         required_fixation = 0.25  # seconds
         selection_timeout = 7  # seconds - max time between selections
@@ -1007,49 +1042,73 @@ class InfantEyetrackingExperiment:
             else:
                 gaze_sample = None
 
-            # Update active animation
+            # Update active animation (only once per frame)
+            animation_just_completed = False
             if active_animation is not None:
                 if active_animation.update(current_time):
-                    # Video playback complete, reset to first frame
-                    self.logger.info(f"Active animation {active_animation.current_box} completed, setting to None")
-                    active_animation.reset_to_first_frame()
+                    # Video playback complete - DON'T reset yet, keep on last frame
+                    self.logger.info(f"Active animation {active_animation.current_box} completed")
                     last_triggered[active_animation.current_box] = current_time
+                    last_completed_box = active_animation.current_box
                     active_animation = None
-                    # NOTE: Don't clear queued_animation here - it should be promoted next!
+                    animation_just_completed = True
 
-            # Promote queued animation if there's no active animation
+            # Promote queued animation if no animation is active
             if active_animation is None and queued_animation is not None:
-                self.logger.info(f"Promoting queued animation {queued_animation.current_box} to active")
+                queued_box = queued_animation['box']
+                queued_obj = queued_animation['obj']
+                self.logger.info(f"Promoting queued animation {queued_box} to active")
+                
                 # Only promote if we haven't reached 4 selections
                 if selection_count < 4:
-                    # At this point, the queued animation is being activated,
-                    # so we need to log it as an executed (non-queued) selection
+                    # Reset the previously completed video to first frame (if any)
+                    if last_completed_box is not None and last_completed_box != queued_box:
+                        self.preloaded_video_stimuli[last_completed_box].stop()
+                        try:
+                            self.preloaded_video_stimuli[last_completed_box].seek(0)
+                        except Exception:
+                            pass
+                        self.preloaded_video_stimuli[last_completed_box].pause()
+                    
                     selection_count += 1
                     last_selection_time = current_time
                     for other_box in self.box_order:
-                        if other_box != queued_animation.current_box:
+                        if other_box != queued_box:
                             last_triggered[other_box] = 0
 
                     # Log that the queued selection is now being executed
-                    box_obj_name = f"{queued_animation.current_box}_{queued_animation.current_object}"
+                    box_obj_name = f"{queued_box}_{queued_obj}"
                     self.data_logger.log_selection(
                         trial_num=self.current_trial,
-                        selection_num=selection_count,  # This is the current selection number
+                        selection_num=selection_count,
                         shape=box_obj_name,
-                        position=self.box_positions[queued_animation.current_box],
-                        fixation_duration=0,  # We don't know the original fixation duration here
-                        queued=False,  # It's no longer queued
-                        was_executed=True,  # It's being executed now
+                        position=self.box_positions[queued_box],
+                        fixation_duration=0,
+                        queued=False,
+                        was_executed=True,
                         selection_time=current_time
                     )
                     self.logger.info(f"Queued animation promoted: {box_obj_name}, selection_count now {selection_count}")
 
-                    # Promote queued animation to active and start playing it
-                    active_animation = queued_animation
-                    active_animation.play(current_time)  # Actually start the video!
+                    # NOW create the VideoAnimation and start playing
+                    video = self.preloaded_video_stimuli[queued_box]
+                    active_animation = VideoAnimation(
+                        video=video,
+                        win=self.win,
+                        pos=self.box_positions[queued_box],
+                        current_box=queued_box,
+                        current_object=queued_obj,
+                        background_videos=self.preloaded_video_stimuli,
+                        video_duration=1.5,
+                        selection_sound=self.selection_sounds[queued_box],
+                        loom_sound=self.loom_sounds[queued_box]
+                    )
+                    active_animation.play(current_time)
                     queued_animation = None
+                    last_completed_box = None
+                else:
+                    queued_animation = None  # Clear queued if we've reached 4
 
-            self.logger.info(gaze_sample)
             # Process gaze sample for each box (only if we have a valid gaze sample)
             if gaze_sample is not None:
                 for box in self.box_order:
@@ -1064,6 +1123,15 @@ class InfantEyetrackingExperiment:
                                 # Enforce cooldown
                                 if current_time - last_triggered[box] < cooldown:
                                     continue
+
+                                # Reset any previously completed video to first frame
+                                if last_completed_box is not None and last_completed_box != box:
+                                    self.preloaded_video_stimuli[last_completed_box].stop()
+                                    try:
+                                        self.preloaded_video_stimuli[last_completed_box].seek(0)
+                                    except Exception:
+                                        pass
+                                    self.preloaded_video_stimuli[last_completed_box].pause()
 
                                 selection_count += 1
                                 last_selection_time = current_time
@@ -1096,58 +1164,48 @@ class InfantEyetrackingExperiment:
                                     loom_sound=self.loom_sounds[box]
                                 )
                                 active_animation.play(current_time)
+                                last_completed_box = None
 
                                 triggered_flags[box] = True
                                 gaze_histories[box] = []
                                 last_triggered[box] = current_time
                                 for other_box in self.box_order:
                                     if other_box != box:
-                                        last_triggered[other_box] = 0  # Reset cooldown for others
+                                        last_triggered[other_box] = 0
 
                             # If an animation is active, allow queuing only if selection_count is less than 3
                             elif active_animation is not None and selection_count < 3:
-                                if queued_animation is None or queued_animation.current_box != box:
+                                if queued_animation is None or queued_animation.get('box') != box:
                                     obj = self.box_object_assignment[box]
                                     self.logger.info(f"Box {box} ({obj}) queued as next candidate (N+1)")
 
-                                    # Log the queued selection - note was_executed=False because it's not shown yet
+                                    # Log the queued selection
                                     box_obj_name = f"{box}_{obj}"
                                     self.data_logger.log_selection(
                                         trial_num=self.current_trial,
-                                        selection_num=selection_count + 1,  # This will be the next selection number
+                                        selection_num=selection_count + 1,
                                         shape=box_obj_name,
                                         position=self.box_positions[box],
                                         fixation_duration=fixation_duration,
                                         queued=True,
-                                        was_executed=False,  # Not executed yet, just queued
+                                        was_executed=False,
                                         selection_time=current_time
                                     )
 
-                                    video = self.preloaded_video_stimuli[box]
-                                    queued_animation = VideoAnimation(
-                                        video=video,
-                                        win=self.win,
-                                        pos=self.box_positions[box],
-                                        current_box=box,
-                                        current_object=obj,
-                                        background_videos=self.preloaded_video_stimuli,
-                                        video_duration=1.5,
-                                        selection_sound=self.selection_sounds[box],
-                                        loom_sound=self.loom_sounds[box]
-                                    )
+                                    # Store queued box info WITHOUT creating VideoAnimation yet
+                                    queued_animation = {
+                                        'box': box,
+                                        'obj': obj,
+                                        'fixation_duration': fixation_duration
+                                    }
                                     triggered_flags[box] = True
                                     gaze_histories[box] = []
                     else:
                         # Clear history if gaze is not on the AOI
                         gaze_histories[box] = []
 
-            # Always ensure something is drawn every frame
-            if active_animation is not None:
-                # Animation is active - update it again to ensure continuous drawing
-                # This is critical: videos must be drawn every frame to play properly
-                active_animation.update(current_time)
-            else:
-                # No animation active - draw static display
+            # Draw frame (only once per loop iteration)
+            if active_animation is None and not animation_just_completed:
                 draw_static_videos(self.preloaded_video_stimuli)
                 self.win.flip()
 
@@ -1156,21 +1214,33 @@ class InfantEyetrackingExperiment:
         # End of trial processes
         # 1. Mark any queued selection that wasn't executed
         if queued_animation is not None:
-            box_obj_name = f"{queued_animation.current_box}_{queued_animation.current_object}"
+            queued_box = queued_animation['box']
+            queued_obj = queued_animation['obj']
+            box_obj_name = f"{queued_box}_{queued_obj}"
             self.data_logger.log_selection(
                 trial_num=self.current_trial,
                 selection_num=selection_count + 1,
                 shape=box_obj_name,
-                position=self.box_positions[queued_animation.current_box],
-                fixation_duration=0,  # Unknown at this point
+                position=self.box_positions[queued_box],
+                fixation_duration=0,
                 queued=True,
                 was_executed=False
             )
 
-        # 2. Record trial summary
+        # 2. Reset all videos to first frame for next trial
+        for box in self.box_order:
+            video = self.preloaded_video_stimuli[box]
+            video.stop()
+            try:
+                video.seek(0)
+            except Exception:
+                pass
+            video.pause()
+
+        # 3. Record trial summary
         self.data_logger.end_trial(self.current_trial)
 
-        # 3. Stop eyetracker recording
+        # 4. Stop eyetracker recording
         if self.subjVariables.get('eyetracker') == "yes":
             self.tracker.stop_recording()
 
@@ -1214,15 +1284,26 @@ class InfantEyetrackingExperiment:
             video = self.AGmovieMatrix[video_name]
             video.size = (self.x_length, self.y_length)
             video.pos = (0,0)
-            # Set the video to loop if it's too short
             video.loop = False  # Only play once
             video.play()
 
             # Keep track of starting time
             start_time = core.getTime()
             total_ag_duration = 5.0
-            # Continue displaying until the movie is finished
-            while not video.isFinished and (core.getTime() - start_time) < total_ag_duration:
+            
+            # Get actual video duration with fallback
+            try:
+                video_duration = video.duration
+                if video_duration is None or video_duration <= 0:
+                    video_duration = total_ag_duration
+            except Exception:
+                video_duration = total_ag_duration
+            
+            # Use whichever is shorter: video duration or total AG duration
+            playback_duration = min(video_duration, total_ag_duration)
+            
+            # Play video using time-based detection (more reliable than isFinished)
+            while (core.getTime() - start_time) < playback_duration:
                 video.draw()
                 self.win.flip()
 
